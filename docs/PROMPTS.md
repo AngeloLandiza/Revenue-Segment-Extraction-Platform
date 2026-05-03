@@ -1,6 +1,6 @@
 # Prompt Templates
 
-All LLM prompts are built in `fitch_extractor/extraction/prompts.py`. Each prompt includes a version string, strict JSON-only instruction, document context, and a Pydantic-generated schema.
+All LLM prompts are built in `revenue_segment_extractor/extraction/prompts.py`. Each prompt includes a version string, strict JSON-only instruction, document context, and a Pydantic-generated schema.
 
 ## `first_pass_revenue_segments_v1`
 
@@ -69,7 +69,7 @@ Template includes:
 
 ## NACE LLM Prompts
 
-NACE mapping prompts are built in `fitch_extractor/nace/service.py` and reranking prompts in `fitch_extractor/nace/rerank.py`.
+NACE mapping prompts are built in `revenue_segment_extractor/nace/service.py` and reranking prompts in `revenue_segment_extractor/nace/rerank.py`.
 
 Templates include:
 

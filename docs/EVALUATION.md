@@ -95,13 +95,13 @@ The optional `notes` field can guide classification for issues that are not infe
 ## Run Evaluation
 
 ```bash
-.venv/bin/python -m fitch_extractor.evaluate --gold 'data/gold/*.csv' --pred exports
+.venv/bin/python -m revenue_segment_extractor.evaluate --gold 'data/gold/*.csv' --pred exports
 ```
 
 Useful threshold overrides:
 
 ```bash
-.venv/bin/python -m fitch_extractor.evaluate \
+.venv/bin/python -m revenue_segment_extractor.evaluate \
   --gold 'data/gold/*.csv' \
   --pred exports \
   --segment-threshold 0.72 \

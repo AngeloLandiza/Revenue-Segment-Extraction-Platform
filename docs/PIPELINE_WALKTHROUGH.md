@@ -1,6 +1,6 @@
 # Pipeline Walkthrough
 
-This document explains the Fitch revenue-segment extraction pipeline end to end. It is written as an implementation guide for the local prototype, not as a marketing overview.
+This document explains the revenue-segment extraction pipeline end to end. It is written as an implementation guide for the local prototype, not as a marketing overview.
 
 The core design is hybrid:
 
@@ -12,13 +12,13 @@ The core design is hybrid:
 
 ## 1. Configuration Is Loaded
 
-1. Runtime settings are read from environment variables in `fitch_extractor/extraction/config.py`.
-2. The extraction provider is selected with `FITCH_EXTRACTION_PROVIDER`.
+1. Runtime settings are read from environment variables in `revenue_segment_extractor/extraction/config.py`.
+2. The extraction provider is selected with `RSE_EXTRACTION_PROVIDER`.
    - `anthropic` calls the Anthropic API.
    - `fake` returns deterministic local fixture output for smoke tests.
-3. The extraction model is selected with `FITCH_EXTRACTION_MODEL`.
-4. Second-pass verification defaults to the extraction model unless `FITCH_VERIFICATION_MODEL` is set.
-5. Arbitration is disabled by default. If `FITCH_ENABLE_ARBITRATION=true`, the arbitration model defaults to the extraction model unless `FITCH_ARBITRATION_MODEL` is explicitly set.
+3. The extraction model is selected with `RSE_EXTRACTION_MODEL`.
+4. Second-pass verification defaults to the extraction model unless `RSE_VERIFICATION_MODEL` is set.
+5. Arbitration is disabled by default. If `RSE_ENABLE_ARBITRATION=true`, the arbitration model defaults to the extraction model unless `RSE_ARBITRATION_MODEL` is explicitly set.
 6. Page bundle size, max output tokens, and temperature are also environment-driven.
 7. API keys are read from environment variables and are not stored in SQLite, exports, validation issues, or logs.
 
@@ -115,7 +115,7 @@ The core design is hybrid:
 ## 8. Candidate Pages Are Bundled For The First LLM Pass
 
 1. Candidate pages are grouped into small bundles.
-2. The bundle size defaults to `2` pages and is controlled by `FITCH_EXTRACTION_PAGE_BUNDLE_SIZE`.
+2. The bundle size defaults to `2` pages and is controlled by `RSE_EXTRACTION_PAGE_BUNDLE_SIZE`.
 3. Each bundle prompt includes:
    - document metadata
    - selected page text
@@ -265,10 +265,10 @@ The core design is hybrid:
 
 1. Arbitration is disabled by default.
 2. It runs only when:
-   - `FITCH_ENABLE_ARBITRATION=true`
+   - `RSE_ENABLE_ARBITRATION=true`
    - an arbitration provider is configured
    - deterministic validation or verification leaves unresolved uncertainty
-3. The arbitration model defaults to the extraction model unless `FITCH_ARBITRATION_MODEL` is explicitly set.
+3. The arbitration model defaults to the extraction model unless `RSE_ARBITRATION_MODEL` is explicitly set.
 4. The prompt version is `revenue_arbitration_v1`.
 5. Arbitration can accept rows, reject rows, identify missing rows, suggest corrections, and require human review.
 6. Its output is schema-validated.
@@ -408,7 +408,7 @@ The core design is hybrid:
 
 ## 25. Prototype Scoring Runs Only On Reviewed Data
 
-1. Scoring is a local demonstration feature, not an official Fitch score.
+1. Scoring is a local demonstration feature, not an official Revenue Segment score.
 2. Scoring uses reviewed or edited non-total segment rows.
 3. Rejected and pending rows are excluded.
 4. The base score comes from reviewed NACE mapping or fallback candidate hierarchy.

@@ -16,16 +16,16 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from fitch_extractor.extraction import (
+from revenue_segment_extractor.extraction import (
     ExtractionSettings,
     LLMProviderError,
     RevenueExtractionService,
     create_provider,
 )
-from fitch_extractor.extraction.normalization import SCALE_MULTIPLIERS
-from fitch_extractor.ingestion import PdfIngestionService
-from fitch_extractor.models import SegmentRow
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.extraction.normalization import SCALE_MULTIPLIERS
+from revenue_segment_extractor.ingestion import PdfIngestionService
+from revenue_segment_extractor.models import SegmentRow
+from revenue_segment_extractor.persistence import (
     DEFAULT_DATABASE_PATH,
     SQLiteRepository,
     connect_database,
@@ -303,7 +303,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Ingest listed PDFs, run revenue extraction, and compare to ground-truth CSV. "
-            "Requires FITCH_EXTRACTION_PROVIDER / API credentials same as scripts/extract_revenue_segments.py."
+            "Requires RSE_EXTRACTION_PROVIDER / API credentials same as scripts/extract_revenue_segments.py."
         )
     )
     parser.add_argument(

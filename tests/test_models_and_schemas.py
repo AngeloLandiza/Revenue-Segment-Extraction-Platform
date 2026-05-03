@@ -2,15 +2,15 @@ from __future__ import annotations
 
 import unittest
 
-from fitch_extractor.api.schemas import (
+from revenue_segment_extractor.api.schemas import (
     DocumentExportResponse,
     DocumentResponse,
     ExtractionSummaryResponse,
     IngestionSummaryResponse,
     SegmentRowResponse,
 )
-from fitch_extractor.ingestion.service import IngestionSummary
-from fitch_extractor.models import PageCandidate
+from revenue_segment_extractor.ingestion.service import IngestionSummary
+from revenue_segment_extractor.models import PageCandidate
 from tests.fixtures import build_document, build_segment_row
 
 
@@ -22,7 +22,7 @@ class ModelSerializationTest(unittest.TestCase):
 
         self.assertEqual("125000000", serialized["reported_total"])
         self.assertEqual("2026-01-02T03:04:05+00:00", serialized["created_at"])
-        self.assertEqual("Example Fitch Co.", serialized["company_name"])
+        self.assertEqual("Example Demo Co.", serialized["company_name"])
 
     def test_api_schema_serializes_from_internal_model(self) -> None:
         segment = build_segment_row()

@@ -23,8 +23,8 @@ class DeploymentContractTest(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("FITCH_ENABLE_ARBITRATION=false", env_example)
-        self.assertIn('FITCH_ENABLE_ARBITRATION:-false', run_script)
+        self.assertIn("RSE_ENABLE_ARBITRATION=false", env_example)
+        self.assertIn('RSE_ENABLE_ARBITRATION:-false', run_script)
         self.assertNotIn("claude-opus", env_example)
         self.assertNotIn("claude-opus", run_script)
 

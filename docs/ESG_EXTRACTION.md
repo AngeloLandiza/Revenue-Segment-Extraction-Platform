@@ -93,7 +93,7 @@ Run:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor tests streamlit_app.py
+.venv/bin/python -m compileall revenue_segment_extractor tests streamlit_app.py
 ```
 
 Relevant tests are in `tests/test_esg_extraction.py`.

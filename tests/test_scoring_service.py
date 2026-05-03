@@ -7,19 +7,19 @@ import unittest
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
-from fitch_extractor.exporting import ExportService
-from fitch_extractor.models import (
+from revenue_segment_extractor.exporting import ExportService
+from revenue_segment_extractor.models import (
     DOCUMENT_STATUS_APPROVED,
     SEGMENT_STATUS_APPROVED,
     NaceSelection,
 )
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.persistence import (
     ReviewService,
     SQLiteRepository,
     connect_database,
     initialize_database,
 )
-from fitch_extractor.scoring import ScoringService, clamp_score
+from revenue_segment_extractor.scoring import ScoringService, clamp_score
 
 
 class SequentialIds:
@@ -286,7 +286,7 @@ class ScoringServiceTest(unittest.TestCase):
         status: str = "new",
     ):
         return self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
             fiscal_period="FY2025",

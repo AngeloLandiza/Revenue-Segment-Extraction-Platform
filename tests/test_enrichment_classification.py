@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from decimal import Decimal
 
-from fitch_extractor.enrichment import (
+from revenue_segment_extractor.enrichment import (
     ROW_TYPE_BUSINESS_SEGMENT,
     ROW_TYPE_ELIMINATION,
     ROW_TYPE_OTHER_RECONCILIATION,

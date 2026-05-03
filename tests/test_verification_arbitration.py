@@ -5,16 +5,16 @@ import unittest
 from decimal import Decimal
 from unittest.mock import patch
 
-from fitch_extractor.extraction import ExtractionSettings, FakeRevenueExtractionProvider
-from fitch_extractor.extraction.arbitration import should_run_arbitration
-from fitch_extractor.extraction.config import DEFAULT_ARBITRATION_MODEL
-from fitch_extractor.extraction.providers import LLMExtractionRequest, LLMExtractionResponse
-from fitch_extractor.extraction.schemas import ExtractedRevenueRow, RevenueExtractionOutput
-from fitch_extractor.extraction.service import RevenueExtractionService
-from fitch_extractor.extraction.validation import DeterministicValidationIssue
-from fitch_extractor.extraction.verification import run_second_pass_verification
-from fitch_extractor.models import SEGMENT_STATUS_NEEDS_REVIEW
-from fitch_extractor.persistence import SQLiteRepository, connect_database, initialize_database
+from revenue_segment_extractor.extraction import ExtractionSettings, FakeRevenueExtractionProvider
+from revenue_segment_extractor.extraction.arbitration import should_run_arbitration
+from revenue_segment_extractor.extraction.config import DEFAULT_ARBITRATION_MODEL
+from revenue_segment_extractor.extraction.providers import LLMExtractionRequest, LLMExtractionResponse
+from revenue_segment_extractor.extraction.schemas import ExtractedRevenueRow, RevenueExtractionOutput
+from revenue_segment_extractor.extraction.service import RevenueExtractionService
+from revenue_segment_extractor.extraction.validation import DeterministicValidationIssue
+from revenue_segment_extractor.extraction.verification import run_second_pass_verification
+from revenue_segment_extractor.models import SEGMENT_STATUS_NEEDS_REVIEW
+from revenue_segment_extractor.persistence import SQLiteRepository, connect_database, initialize_database
 from tests.fixtures import build_document
 from tests.test_normalization_validation import _normalized_row, _parsed_page_with_table
 
@@ -30,7 +30,7 @@ class VerificationAndArbitrationTest(unittest.TestCase):
     def test_env_arbitration_model_defaults_to_env_extraction_model(self) -> None:
         with patch.dict(
             "os.environ",
-            {"FITCH_EXTRACTION_MODEL": "claude-sonnet-custom"},
+            {"RSE_EXTRACTION_MODEL": "claude-sonnet-custom"},
             clear=True,
         ):
             settings = ExtractionSettings.from_env()
@@ -147,7 +147,7 @@ class VerificationAndArbitrationTest(unittest.TestCase):
         initialize_database(connection)
         repo = SQLiteRepository(connection)
         document = repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="sample-10k.pdf",
             source_path="sample-10k.pdf",
             fiscal_period="FY2025",
@@ -212,7 +212,7 @@ class _SingleRowExtractionProvider:
             extraction_notes="Fixture.",
         )
         output = RevenueExtractionOutput(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="sample-10k.pdf",
             fiscal_period="FY2025",
             reported_total=Decimal("120000000"),
@@ -290,7 +290,7 @@ def _repository_with_revenue_row(*, reported_total: Decimal):
     initialize_database(connection)
     repo = SQLiteRepository(connection)
     document = repo.create_document(
-        company_name="Example Fitch Co.",
+        company_name="Example Demo Co.",
         document_name="sample-10k.pdf",
         source_path="sample-10k.pdf",
         fiscal_period="FY2025",

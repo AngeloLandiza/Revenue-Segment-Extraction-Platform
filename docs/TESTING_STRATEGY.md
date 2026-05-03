@@ -217,7 +217,7 @@ The current Streamlit app keeps business logic in services and testable UI helpe
 Verify:
 
 - API response shapes remain backwards compatible through Pydantic schema tests.
-- `fitch_extractor/ui/review.py` helper tests cover pipeline steps, summary/table shaping, table edit detection, and export readiness.
+- `revenue_segment_extractor/ui/review.py` helper tests cover pipeline steps, summary/table shaping, table edit detection, and export readiness.
 - Streamlit-specific smoke checks should be added once the project chooses a browser/UI test runner.
 - Future HTTP route contract tests should target the same `ReviewService` methods rather than duplicating review rules in route handlers.
 
@@ -226,7 +226,7 @@ Current command:
 ```bash
 .venv/bin/python -m unittest discover -s tests
 .venv/bin/python -m unittest tests.test_evaluation
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 ## Failure Documentation

@@ -8,13 +8,13 @@ import zipfile
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
-from fitch_extractor.exporting import EXPORT_COLUMNS, ExportService
-from fitch_extractor.models import (
+from revenue_segment_extractor.exporting import EXPORT_COLUMNS, ExportService
+from revenue_segment_extractor.models import (
     DOCUMENT_STATUS_APPROVED,
     SEGMENT_STATUS_APPROVED,
     SEGMENT_STATUS_REJECTED,
 )
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.persistence import (
     ReviewService,
     SQLiteRepository,
     connect_database,
@@ -65,7 +65,7 @@ class ExportServiceTest(unittest.TestCase):
 
         self.assertEqual(EXPORT_COLUMNS, list(rows[0].keys()))
         self.assertEqual(1, len(rows))
-        self.assertEqual("Example Fitch Co.", rows[0]["company_name"])
+        self.assertEqual("Example Demo Co.", rows[0]["company_name"])
         self.assertEqual("Insurance", rows[0]["segment_name"])
         self.assertEqual("42", rows[0]["revenue_value"])
         self.assertEqual("42000000", rows[0]["normalized_value"])
@@ -97,7 +97,7 @@ class ExportServiceTest(unittest.TestCase):
 
     def test_export_is_blocked_before_document_approval(self) -> None:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
             fiscal_period="FY2025",
@@ -138,7 +138,7 @@ class ExportServiceTest(unittest.TestCase):
 
     def _create_approved_document_with_rows(self) -> tuple[str, str, str]:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
             fiscal_period="FY2025",

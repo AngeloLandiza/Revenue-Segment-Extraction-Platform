@@ -20,20 +20,20 @@ Minimum real-extraction configuration:
 
 ```toml
 ANTHROPIC_API_KEY = "sk-ant-..."
-FITCH_EXTRACTION_PROVIDER = "anthropic"
-FITCH_EXTRACTION_MODEL = "claude-sonnet-4-6"
-FITCH_ENABLE_SECOND_PASS_VERIFICATION = "true"
-FITCH_ENABLE_ARBITRATION = "false"
+RSE_EXTRACTION_PROVIDER = "anthropic"
+RSE_EXTRACTION_MODEL = "claude-sonnet-4-6"
+RSE_ENABLE_SECOND_PASS_VERIFICATION = "true"
+RSE_ENABLE_ARBITRATION = "false"
 ```
 
 For a no-API smoke deployment, use:
 
 ```toml
-FITCH_EXTRACTION_PROVIDER = "fake"
-FITCH_ENABLE_ARBITRATION = "false"
+RSE_EXTRACTION_PROVIDER = "fake"
+RSE_ENABLE_ARBITRATION = "false"
 ```
 
-Only set `FITCH_ARBITRATION_MODEL` when arbitration is intentionally enabled and the selected
+Only set `RSE_ARBITRATION_MODEL` when arbitration is intentionally enabled and the selected
 model is available to the account.
 
 ## Runtime Storage

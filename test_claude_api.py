@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Ping Anthropic Claude using the same provider stack as revenue extraction.
 
-Requires ANTHROPIC_API_KEY. Optional env: FITCH_EXTRACTION_MODEL (see fitch_extractor.extraction.config).
+Requires ANTHROPIC_API_KEY. Optional env: RSE_EXTRACTION_MODEL (see revenue_segment_extractor.extraction.config).
 
 Exit codes: 0 success, 1 API/runtime failure, 2 configuration error.
 """
@@ -16,8 +16,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from fitch_extractor.extraction.config import ExtractionSettings
-from fitch_extractor.extraction.providers import LLMExtractionRequest, LLMProviderError, create_provider
+from revenue_segment_extractor.extraction.config import ExtractionSettings
+from revenue_segment_extractor.extraction.providers import LLMExtractionRequest, LLMProviderError, create_provider
 
 
 def main() -> int:

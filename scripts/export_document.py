@@ -9,8 +9,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from fitch_extractor.exporting import ExportService
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.exporting import ExportService
+from revenue_segment_extractor.persistence import (
     DEFAULT_DATABASE_PATH,
     SQLiteRepository,
     connect_database,
@@ -20,13 +20,13 @@ from fitch_extractor.persistence import (
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Export an approved Fitch document to CSV, XLSX, and audit JSON."
+        description="Export an approved document to CSV, XLSX, and audit JSON."
     )
     parser.add_argument("document_id", help="Approved document ID to export.")
     parser.add_argument(
         "--database",
         default=str(DEFAULT_DATABASE_PATH),
-        help="SQLite database path. Defaults to data/fitch_extractor.sqlite3.",
+        help="SQLite database path. Defaults to data/revenue_segment_extractor.sqlite3.",
     )
     parser.add_argument(
         "--output-dir",

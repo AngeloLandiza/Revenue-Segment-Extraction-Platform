@@ -1,5 +1,5 @@
 {
-  "model_label": "Prototype demo score only. Not an official Fitch Ratings or Sustainable Fitch score.",
+  "model_label": "Prototype demo score only. Not an official rating or sustainability score.",
   "scale": {
     "min": 1.0,
     "max": 5.0,

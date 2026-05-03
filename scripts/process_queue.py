@@ -9,21 +9,21 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.persistence import (
     DEFAULT_DATABASE_PATH,
     SQLiteRepository,
     connect_database,
     initialize_database,
 )
-from fitch_extractor.queueing import DocumentQueueService
+from revenue_segment_extractor.queueing import DocumentQueueService
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Process queued Fitch document extraction jobs.")
+    parser = argparse.ArgumentParser(description="Process queued document extraction jobs.")
     parser.add_argument(
         "--database",
         default=str(DEFAULT_DATABASE_PATH),
-        help="SQLite database path. Defaults to data/fitch_extractor.sqlite3.",
+        help="SQLite database path. Defaults to data/revenue_segment_extractor.sqlite3.",
     )
     parser.add_argument(
         "--worker-id",

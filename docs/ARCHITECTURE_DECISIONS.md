@@ -1,5 +1,66 @@
 # Architecture Decisions
 
+## 2026-05-02: Neutral Platform Naming And Environment Variables
+
+### What changed
+
+- Renamed the Python package from the previous branded package name to
+  `revenue_segment_extractor`.
+- Updated all imports, CLI commands, docs, and tests to use the new package path.
+- Renamed application environment variables from the previous branded prefix to the neutral
+  `RSE_` prefix.
+- Renamed the default SQLite database path to `data/revenue_segment_extractor.sqlite3`.
+- Updated README, Streamlit labels, CLI help, scoring labels, and examples to use neutral platform
+  language.
+- Added this decision-log entry without preserving the removed brand string.
+
+### Why this design was chosen
+
+The user asked for the codebase, README, and environment variables to avoid the former brand name.
+A direct package and environment-variable rename is clearer than leaving compatibility aliases,
+because aliases would keep the removed string in code and configuration. The `RSE_` prefix is
+short, readable, and specific to the revenue segment extraction platform.
+
+### Alternatives rejected
+
+- Keeping legacy environment-variable aliases: rejected because that would preserve the old prefix
+  in code.
+- Only changing the README: rejected because package paths, imports, CLI help, tests, and docs
+  would still expose the old name.
+- Renaming the repository itself: rejected because the existing GitHub repository name is already
+  neutral and outside the application code surface.
+
+### Tradeoffs remaining
+
+- Existing local `.env.local` files must be updated from the old prefix to `RSE_`.
+- Existing local SQLite files using the old default filename are not automatically migrated.
+- Downstream scripts importing the old package name must update imports to
+  `revenue_segment_extractor`.
+
+### How to test or verify the change
+
+Run:
+
+```bash
+rg -i "removed-brand-token" .
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py compare_extractions_to_ground_truth.py test_claude_api.py
+```
+
+Manual verification:
+
+Set `RSE_EXTRACTION_PROVIDER=fake`, run `.venv/bin/streamlit run streamlit_app.py`, and confirm the
+app opens with neutral page title, sidebar labels, queue processing, review, scoring, and export
+controls.
+
+### How this supports the platform requirements
+
+- Keeps the hybrid deterministic-plus-LLM extraction pipeline intact.
+- Preserves strict schemas, Python normalization, validation, review gates, NACE mapping, ESG
+  extraction, scoring, and final export behavior.
+- Removes brand-specific naming from code and environment configuration while keeping the
+  implementation readable for industry reviewers.
+
 ## 2026-05-02: GitHub Repository Landing Page Without GitHub Pages
 
 ### What changed
@@ -41,7 +102,7 @@ Run:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py compare_extractions_to_ground_truth.py test_claude_api.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py compare_extractions_to_ground_truth.py test_claude_api.py
 ```
 
 Manual verification:
@@ -50,7 +111,7 @@ Open the pushed GitHub repository and confirm the root `README.md` renders on th
 page. Confirm there is no `.github/workflows/pages.yml`, no `docs/index.html`, and no
 `docs/.nojekyll`.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Preserves the Streamlit review workbench and all extraction, validation, NACE, ESG, scoring, and
   export gates.
@@ -62,7 +123,7 @@ page. Confirm there is no `.github/workflows/pages.yml`, no `docs/index.html`, a
 
 ### What changed
 
-- Added resume-ready wording guidance for describing the Fitch revenue-segment extraction prototype.
+- Added resume-ready wording guidance for describing the revenue-segment extraction prototype.
 - No application code, schemas, UI behavior, persistence, extraction logic, review gates, or export behavior changed.
 - Clarified resume language around AI-assisted development tools so the project description stays honest
   without weakening ownership of the software work.
@@ -96,7 +157,7 @@ Review the suggested resume bullets against the implemented workflow documented 
 `docs/PARSING_AND_RETRIEVAL.md`, `docs/LLM_EXTRACTION.md`, `docs/NACE_MAPPING.md`, and
 `docs/REVIEW_WORKFLOW.md`.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps the project description aligned with the hybrid deterministic-plus-LLM architecture.
 - Highlights segment extraction, validation, review gates, NACE mapping, ESG extraction, and export.
@@ -149,13 +210,13 @@ Run:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py compare_extractions_to_ground_truth.py test_claude_api.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py compare_extractions_to_ground_truth.py test_claude_api.py
 ```
 
 Manual verification:
 
 ```bash
-export FITCH_EXTRACTION_PROVIDER=fake
+export RSE_EXTRACTION_PROVIDER=fake
 .venv/bin/streamlit run streamlit_app.py
 ```
 
@@ -164,7 +225,7 @@ rows, approve or reject every row, approve the document, and create exports. Als
 `docs/index.html` and confirm the static GitHub Pages links resolve to the documentation index and
 Streamlit Community Cloud guide.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Preserves the hybrid deterministic-plus-LLM pipeline and strict schema boundaries.
 - Keeps Python normalization, validation, NACE mapping, ESG extraction, scoring, human review, and
@@ -209,7 +270,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_persistence_repository tests.test_queueing
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -222,7 +283,7 @@ scripts/run_streamlit_anthropic.sh
 
 Upload a PDF, click `Queue extraction`, then click `Process next queued document` in the sidebar. For terminal processing, run `.venv/bin/python scripts/process_queue.py --all`.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Preserves the hybrid deterministic-plus-LLM pipeline and strict extraction schemas.
 - Keeps Python normalization, validation, review gates, NACE, ESG, scoring, and export behavior intact.
@@ -260,14 +321,14 @@ Run:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
 
 Open `docs/PIPELINE_WALKTHROUGH.md` and confirm the numbered flow matches the Streamlit workflow: upload or select a document, run extraction, review segment and ESG evidence, approve rows, compute scores, approve the document, and export.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Makes the hybrid deterministic-plus-LLM design explicit.
 - Shows where keyword search, strict schemas, Python validation, review gates, NACE, ESG, scoring, and export fit together.
@@ -305,7 +366,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_ui_review_enrichment
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -316,7 +377,7 @@ Manual verification:
 
 Open a document with ESG factors, go to `ESG Factors`, select a factor with a page reference, and confirm the evidence text appears with a highlighted source page when the text can be matched.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Extends source-evidence review from revenue segments to ESG factors.
 - Keeps deterministic parsing as the source of bbox coordinates.
@@ -354,7 +415,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_pdf_ingestion
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -365,7 +426,7 @@ Manual verification:
 
 Open a document with extracted rows, go to `Segment Review`, then `Evidence`. Select a row with stored bbox evidence and confirm the source PDF page renders with the evidence area highlighted.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Strengthens human review by showing the original page location for each extracted revenue segment reference.
 - Preserves auditability by keeping evidence text and page references alongside the visual highlight.
@@ -388,12 +449,12 @@ The failed Opus request came from the optional arbitration path, not from the co
 
 - Removing arbitration entirely: rejected because the existing optional hard-case path and tests are useful.
 - Renaming persisted arbitration issue types now: rejected because review logic and existing validation records rely on the current names.
-- Silently overriding an explicitly set `FITCH_ARBITRATION_MODEL`: rejected because explicit environment configuration should remain visible and controllable.
+- Silently overriding an explicitly set `RSE_ARBITRATION_MODEL`: rejected because explicit environment configuration should remain visible and controllable.
 
 ### Tradeoffs remaining
 
 - Existing issue type names still contain `opus` for backwards compatibility even when arbitration uses Sonnet.
-- If a shell still exports `FITCH_ARBITRATION_MODEL=claude-opus-4-7`, that explicit setting will still request Opus until the variable is unset or changed.
+- If a shell still exports `RSE_ARBITRATION_MODEL=claude-opus-4-7`, that explicit setting will still request Opus until the variable is unset or changed.
 - Arbitration remains disabled by default and still runs only for uncertain documents when enabled.
 
 ### How to test or verify the change
@@ -403,19 +464,19 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_verification_arbitration
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
 
 ```bash
-unset FITCH_ARBITRATION_MODEL
+unset RSE_ARBITRATION_MODEL
 .venv/bin/streamlit run streamlit_app.py
 ```
 
-Run extraction on a document. In the `Workflow Usage` details, confirm no call uses an Opus model unless `FITCH_ARBITRATION_MODEL` was explicitly set to one.
+Run extraction on a document. In the `Workflow Usage` details, confirm no call uses an Opus model unless `RSE_ARBITRATION_MODEL` was explicitly set to one.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps the hybrid pipeline and human review gate unchanged.
 - Removes a fragile optional model dependency from the default local prototype workflow.
@@ -437,7 +498,7 @@ The provider wrapper records usage across revenue extraction, optional verificat
 ### Alternatives rejected
 
 - Persisting workflow usage in SQLite: rejected for now because the request only needs a small UI section and persistence would require schema migration and additional repository methods.
-- Adding token/cost columns to final exports: rejected because final Fitch deliverables should remain reviewed revenue-segment outputs, not operational run telemetry.
+- Adding token/cost columns to final exports: rejected because final Revenue Segment deliverables should remain reviewed revenue-segment outputs, not operational run telemetry.
 - Estimating token counts only from text length even when provider usage exists: rejected because Anthropic responses can provide actual input/output token usage.
 
 ### Tradeoffs remaining
@@ -453,7 +514,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_llm_usage
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -464,7 +525,7 @@ Manual verification:
 
 Upload a PDF, choose either the Anthropic provider or fake smoke-test provider, and click `Run extraction`. After the workflow completes, confirm the `Workflow Usage` section appears above the approval checklist and that the expander lists each LLM request with model, prompt version, tokens, and estimated cost.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps the hybrid pipeline intact by measuring the existing deterministic-plus-LLM workflow rather than replacing it.
 - Makes pre-review operating cost and latency visible before human review.
@@ -504,7 +565,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_enrichment_classification tests.test_nace_mapping tests.test_ui_review_enrichment
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -515,7 +576,7 @@ Manual verification:
 
 Open `10443_AR_2024_English.pdf`. Confirm the document name wraps in the top summary, business interruption proceeds and government grant income are not counted as NACE/scoring rows, and Commercial services can show `42.22` as a candidate that still needs review.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps the hybrid retrieval-before-LLM design while making candidate validation less brittle.
 - Avoids assigning insurance-sector NACE to insurance recoveries.
@@ -558,7 +619,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_enrichment_classification tests.test_nace_mapping tests.test_esg_extraction tests.test_scoring_service
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -569,7 +630,7 @@ Manual verification:
 
 Upload or open a reviewed document with business rows plus totals/eliminations. Confirm totals and eliminations remain visible but do not receive NACE selections or scores, mixed segments show review metadata, company-wide ESG factors remain company-level, and final exports include the additive metadata columns.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Preserves the hybrid pipeline by adding deterministic enrichment gates before LLM-dependent NACE/ESG decisions.
 - Keeps strict schemas and Python validation/normalization as the source of score eligibility.
@@ -609,7 +670,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -620,7 +681,7 @@ Manual verification:
 
 Open a reviewed document, click `Auto approve document`, click `Continue`, read the final warning, then click `Auto approve now`. Confirm the document becomes approved only if no blockers remain.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Reduces reviewer effort for documents that have already been inspected and only need final status updates.
 - Preserves human confirmation, audit logging, and final approval gates.
@@ -657,7 +718,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -668,7 +729,7 @@ Manual verification:
 
 Open an approved/export-ready document, click `Create export files`, then use `Download CSV` in the Export section.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Makes final reviewed outputs easier to collect for class submission and downstream ESG/NACE workflows.
 - Preserves the approval gate before final export artifacts are downloadable.
@@ -704,7 +765,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -715,7 +776,7 @@ Manual verification:
 
 Open a reviewed document with operating rows plus total/reconciliation rows, accept NACE mappings for the operating rows, and confirm the NACE checklist reaches 100%.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps analyst review focused on business activities that need NACE mapping.
 - Avoids misleading approval progress for documents that include totals and reconciliation lines.
@@ -756,7 +817,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -767,9 +828,9 @@ Manual verification:
 
 Select NACE candidates and click `Accept selected`; select ESG factors in either table and batch approve or reject them.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
-- Speeds review for Sustainable Fitch analysts handling many extracted rows and factors.
+- Speeds review for analysts handling many extracted rows and factors.
 - Keeps NACE and ESG review auditable and human-gated.
 - Preserves export and persistence contracts.
 
@@ -804,7 +865,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -815,7 +876,7 @@ Manual verification:
 
 Click each approval checklist task and confirm it jumps to, or highlights, the associated review section.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Makes the human review gate faster and clearer for analysts.
 - Keeps the full audit detail available while improving navigation.
@@ -853,7 +914,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -864,7 +925,7 @@ Manual verification:
 
 Open a document with validation issues, select several issues in the validation table, enter a batch note, and click acknowledge or resolve. Confirm the detailed issue expanders remain available.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Speeds analyst review of validation exceptions across large annual reports.
 - Keeps review actions auditable through existing review events.
@@ -883,7 +944,7 @@ Open a document with validation issues, select several issues in the validation 
 
 ### Why this design was chosen
 
-The user needs a clearer answer to "what is left before approval" without hiding details from Sustainable Fitch analysts. The checklist summarizes the same review state that already gates approval, while detailed evidence, validation, NACE, ESG, and scoring views remain available below.
+The user needs a clearer answer to "what is left before approval" without hiding details from analysts. The checklist summarizes the same review state that already gates approval, while detailed evidence, validation, NACE, ESG, and scoring views remain available below.
 
 Batch approve/reject uses the existing `ReviewService` so each row still gets normal review-event logging and required-field validation. Optional arbitration is not part of the core extraction gate, and the observed Anthropic error came from a long optional Opus request, so disabling it by default avoids blocking ordinary document review.
 
@@ -910,7 +971,7 @@ Run:
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_verification_arbitration
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -921,7 +982,7 @@ Manual verification:
 
 Select a document with multiple rows, use `Select all`, approve/reject selected rows, and confirm the approval checklist percentages update. If an old `llm_arbitration_provider_error` exists, confirm it appears as a warning instead of blocking document approval.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Makes the human review gate easier to operate at analyst scale.
 - Preserves validation, evidence requirements, and review-event audit logging.
@@ -963,7 +1024,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_parallel_folder_pipeline
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py
 ```
 
 Manual verification:
@@ -974,7 +1035,7 @@ Manual verification:
 
 Use at least one PDF whose company name cannot be auto-detected. Confirm the console prints `WAIT ... queued for manual metadata input`, asks for metadata in sequence, then retries that PDF and continues the pipeline.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps high-confidence metadata behavior without blocking an entire folder run permanently.
 - Preserves deterministic ingestion before LLM extraction.
@@ -985,7 +1046,7 @@ Use at least one PDF whose company name cannot be auto-detected. Confirm the con
 
 ### What changed
 
-- Renamed the app header and helper copy around a Sustainable Fitch analyst workflow.
+- Renamed the app header and helper copy around a sustainability review analyst workflow.
 - Added example placeholders for upload metadata, reviewer notes, manual row entry, NACE overrides, validation notes, and ESG notes.
 - Replaced oversized pipeline metrics with compact step labels and a progress bar.
 - Added table column configuration for segment review, NACE candidates, ESG factors, and scoring output so long text remains available without dominating the page.
@@ -996,7 +1057,7 @@ Use at least one PDF whose company name cannot be auto-detected. Confirm the con
 
 The existing app already exposed the required review workflow, but some controls lacked examples and large table/text fields could be hard to scan. The new design keeps all analyst-facing details available while making the default page easier to operate for sustainability data teams reviewing annual reports at volume.
 
-The change is intentionally UI-only except for helper functions in `fitch_extractor.ui.review`; it does not alter extraction, validation, persistence, API, export, or review contracts.
+The change is intentionally UI-only except for helper functions in `revenue_segment_extractor.ui.review`; it does not alter extraction, validation, persistence, API, export, or review contracts.
 
 ### Alternatives rejected
 
@@ -1017,7 +1078,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_review_workflow
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
@@ -1028,9 +1089,9 @@ Manual verification:
 
 Open the app, upload a PDF, confirm the sidebar fields show examples, run extraction, inspect the workflow progress bar, edit segment rows, inspect evidence, validation, NACE, ESG, scoring, and export panels.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
-- Makes the human review gate more usable for Sustainable Fitch analysts.
+- Makes the human review gate more usable for analysts.
 - Keeps source evidence, validation issues, NACE choices, ESG factors, scoring rationale, and export status visible.
 - Preserves deterministic parsing, extraction, validation, and final export behavior.
 - Improves review efficiency without reducing audit detail.
@@ -1071,7 +1132,7 @@ Run:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_pdf_ingestion
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
@@ -1082,7 +1143,7 @@ Manual verification:
 
 Upload a PDF and leave company name, fiscal period, currency, and scale blank. Confirm clear documents are populated into the stored document record, and ambiguous documents stop with a message asking for company name instead of guessing.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps deterministic parsing and metadata retrieval before LLM calls.
 - Improves upload ergonomics without weakening validation or review.
@@ -1129,7 +1190,7 @@ Run:
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_cli_smoke
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest tests.test_provider_security
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q fitch_extractor streamlit_app.py scripts tests
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
@@ -1141,7 +1202,7 @@ Manual verification:
 
 Upload a PDF, run analysis, review rows/evidence/validation, approve the document, export files, and run the evaluator against a labeled gold set.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps deterministic parsing and retrieval before LLM calls.
 - Preserves strict LLM schemas, normalization, validation, and human review.
@@ -1153,8 +1214,8 @@ Upload a PDF, run analysis, review rows/evidence/validation, approve the documen
 
 ### What changed
 
-- Added `fitch_extractor.evaluation` for gold-set loading, prediction loading, row matching, metric calculation, failure classification, and report rendering.
-- Added `python -m fitch_extractor.evaluate` as the CLI entrypoint for comparing CSV/JSON gold files with exported prediction files or export directories.
+- Added `revenue_segment_extractor.evaluation` for gold-set loading, prediction loading, row matching, metric calculation, failure classification, and report rendering.
+- Added `python -m revenue_segment_extractor.evaluate` as the CLI entrypoint for comparing CSV/JSON gold files with exported prediction files or export directories.
 - Added generated report outputs under `reports/`: `evaluation_summary.md`, `evaluation_results.csv`, and `failure_analysis.md`.
 - Added focused unit and integration tests for matching, metrics, failure taxonomy, and report generation.
 - Added `docs/EVALUATION.md` and updated export/testing documentation for the evaluation workflow.
@@ -1187,18 +1248,18 @@ Run:
 ```bash
 .venv/bin/python -m unittest tests.test_evaluation
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
 
 ```bash
-.venv/bin/python -m fitch_extractor.evaluate --gold 'data/gold/*.csv' --pred exports
+.venv/bin/python -m revenue_segment_extractor.evaluate --gold 'data/gold/*.csv' --pred exports
 ```
 
 Confirm that `reports/evaluation_summary.md`, `reports/evaluation_results.csv`, and `reports/failure_analysis.md` are regenerated from the selected inputs.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Measures extraction quality, reconciliation, reviewer effort, validation issues, and common failure modes against manually labeled gold data.
 - Keeps deterministic Python normalization, matching, and validation after extraction.
@@ -1219,7 +1280,7 @@ Confirm that `reports/evaluation_summary.md`, `reports/evaluation_results.csv`, 
 
 ### Why this design was chosen
 
-The crash was caused by Anthropic returning `NotFoundError`, which is consistent with an unavailable model identifier. NACE mapping had a separate hard-coded default (`claude-3-5-haiku-latest`) and Streamlit did not pass the configured model, so changing `FITCH_EXTRACTION_MODEL` did not reliably control NACE mapping.
+The crash was caused by Anthropic returning `NotFoundError`, which is consistent with an unavailable model identifier. NACE mapping had a separate hard-coded default (`claude-3-5-haiku-latest`) and Streamlit did not pass the configured model, so changing `RSE_EXTRACTION_MODEL` did not reliably control NACE mapping.
 
 Using the shared extraction model keeps the local prototype easier to configure and avoids hidden model defaults across pipeline stages.
 
@@ -1231,7 +1292,7 @@ Using the shared extraction model keeps the local prototype easier to configure 
 
 ### Tradeoffs remaining
 
-- Anthropic account access can still vary by model. If `claude-sonnet-4-5-20250929` is unavailable for an account, set `FITCH_EXTRACTION_MODEL` to a model returned by Anthropic's Models API.
+- Anthropic account access can still vary by model. If `claude-sonnet-4-5-20250929` is unavailable for an account, set `RSE_EXTRACTION_MODEL` to a model returned by Anthropic's Models API.
 - Streamlit shows provider failures as warnings; it does not automatically diagnose account/model availability.
 
 ### How to test or verify the change
@@ -1241,20 +1302,20 @@ Run:
 ```bash
 .venv/bin/python -m unittest tests.test_nace_mapping
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
 
 ```bash
-export FITCH_EXTRACTION_PROVIDER=anthropic
-export FITCH_EXTRACTION_MODEL=claude-sonnet-4-5-20250929
+export RSE_EXTRACTION_PROVIDER=anthropic
+export RSE_EXTRACTION_MODEL=claude-sonnet-4-5-20250929
 .venv/bin/streamlit run streamlit_app.py
 ```
 
 Click `Run NACE mapping`. If Anthropic rejects the model, the UI should show a warning with the model name instead of a traceback.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps the LLM-based NACE workflow configurable and debuggable.
 - Avoids hidden stale model names in the review UI.
@@ -1301,7 +1362,7 @@ Run:
 ```bash
 .venv/bin/python -m unittest tests.test_nace_mapping
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual review flow:
@@ -1312,7 +1373,7 @@ Manual review flow:
 
 Select a document, click `Run NACE mapping`, inspect the NACE candidates for each segment, and confirm total/elimination rows do not receive automatic selected codes. Use the reviewer accept/override controls for any remaining ambiguous row.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps deterministic retrieval before LLM classification.
 - Uses strict schemas for LLM output.
@@ -1326,7 +1387,7 @@ Select a document, click `Run NACE mapping`, inspect the NACE candidates for eac
 ### What changed
 
 - Added `config/scoring_rules.yaml` for prototype NACE base scores, scale bounds, and ESG adjustment rules.
-- Added `fitch_extractor/scoring.py` to compute segment scores and company weighted-average scores.
+- Added `revenue_segment_extractor/scoring.py` to compute segment scores and company weighted-average scores.
 - Added persisted `CompanyScore` records and repository methods for replacing latest document scores.
 - Updated exports to recompute and include prototype score fields and score audit records.
 - Added a Streamlit `Scoring` tab with a prototype-only warning and score table.
@@ -1336,7 +1397,7 @@ Select a document, click `Run NACE mapping`, inspect the NACE candidates for eac
 
 The scoring layer is deterministic and transparent. It reads reviewed extraction, NACE, and ESG data from the repository, applies config-driven rules, caps scores in Python, persists the calculation output, and exposes rationales for review and export.
 
-The model is intentionally labeled as a class/project prototype because it is not an official Fitch Ratings or Sustainable Fitch methodology. Keeping rules in config makes score assumptions easy to inspect and adjust without hiding logic in prompts.
+The model is intentionally labeled as a class/project prototype because it is not an official ratings or sustainability methodology. Keeping rules in config makes score assumptions easy to inspect and adjust without hiding logic in prompts.
 
 ### Alternatives rejected
 
@@ -1360,7 +1421,7 @@ Run:
 ```bash
 .venv/bin/python -m unittest tests.test_scoring_service
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual review flow:
@@ -1371,7 +1432,7 @@ Manual review flow:
 
 Open a reviewed document, go to `Scoring`, click `Compute prototype scores`, inspect segment and company scores, then approve/export the document and confirm score fields appear in CSV/XLSX/JSON.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps scoring separate from extraction and review.
 - Uses deterministic NACE and revenue data before any scoring output.
@@ -1384,7 +1445,7 @@ Open a reviewed document, go to `Scoring`, click `Compute prototype scores`, ins
 
 ### What changed
 
-- Added deterministic ESG candidate-page retrieval in `fitch_extractor/extraction/esg.py`.
+- Added deterministic ESG candidate-page retrieval in `revenue_segment_extractor/extraction/esg.py`.
 - Added strict Pydantic ESG extraction schemas and a versioned `esg_extraction_v1` prompt.
 - Added fake-provider ESG output for local tests without live LLM calls.
 - Added deterministic segment-link enforcement before ESG factors are persisted.
@@ -1420,7 +1481,7 @@ Run:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor tests streamlit_app.py
+.venv/bin/python -m compileall revenue_segment_extractor tests streamlit_app.py
 ```
 
 Manual review flow:
@@ -1431,7 +1492,7 @@ Manual review flow:
 
 Open a document, use `Run ESG extraction`, review factors on the `ESG Factors` tab, edit/unlink/relink as needed, approve or reject each factor, then export after the document review gate passes.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps deterministic retrieval before LLM calls and avoids full-report prompts.
 - Uses strict schemas for LLM ESG output and fake-provider tests.
@@ -1478,7 +1539,7 @@ python3 -m unittest discover -s tests
 
 Expected result: the smoke test passes and verifies that the required planning and contract docs exist.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Documents the required hybrid pipeline design before implementation begins.
 - Preserves contract discipline by explicitly stating that no current API contract exists in this workspace.
@@ -1490,10 +1551,10 @@ Expected result: the smoke test passes and verifies that the required planning a
 
 ### What changed
 
-- Added frozen internal dataclasses for all required Fitch pipeline entities in `fitch_extractor/models.py`.
-- Added Pydantic 2 response schemas in `fitch_extractor/api/schemas.py`.
-- Added SQLite initialization/reset helpers in `fitch_extractor/persistence/database.py`.
-- Added `SQLiteRepository` CRUD-style persistence methods in `fitch_extractor/persistence/repository.py`.
+- Added frozen internal dataclasses for all required Revenue Segment pipeline entities in `revenue_segment_extractor/models.py`.
+- Added Pydantic 2 response schemas in `revenue_segment_extractor/api/schemas.py`.
+- Added SQLite initialization/reset helpers in `revenue_segment_extractor/persistence/database.py`.
+- Added `SQLiteRepository` CRUD-style persistence methods in `revenue_segment_extractor/persistence/repository.py`.
 - Added `ReviewService` for review status changes and review event logging.
 - Added `scripts/manage_db.py` for local database initialization and reset.
 - Added `requirements.txt` with the required Pydantic dependency.
@@ -1541,7 +1602,7 @@ python scripts/manage_db.py
 python scripts/manage_db.py --reset
 ```
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Creates durable internal records for documents, parsed pages, candidate pages, segment rows, evidence, validation issues, NACE candidates, ESG factors, scores, review events, and export metadata.
 - Keeps deterministic parsing/retrieval outputs (`ParsedPage`, `PageCandidate`) separate from later LLM extraction outputs (`SegmentRow`, `SegmentEvidence`).
@@ -1554,7 +1615,7 @@ python scripts/manage_db.py --reset
 
 ### What changed
 
-- Added a deterministic PDF ingestion layer under `fitch_extractor/ingestion/`.
+- Added a deterministic PDF ingestion layer under `revenue_segment_extractor/ingestion/`.
 - Added PyMuPDF page text, block, page-dimension, bounding-box, and PNG rendering support.
 - Added pdfplumber table extraction with row and cell structure where pdfplumber can provide it.
 - Added weak/no-text page detection and an explicit `PageTextFallback` extension point for future OCR or vision text.
@@ -1603,7 +1664,7 @@ python scripts/ingest_pdf.py /path/to/annual-report.pdf --company-name "Example 
 
 Expected result: JSON with document metadata, page counts, no-text pages, and ranked candidate pages with scores, matched signals, and reasons.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Establishes deterministic PDF parsing before any LLM extraction.
 - Persists page text, tables, bounding boxes, and candidate rankings in SQLite.
@@ -1616,7 +1677,7 @@ Expected result: JSON with document metadata, page counts, no-text pages, and ra
 
 ### What changed
 
-- Added `fitch_extractor/extraction/` with strict Pydantic output schemas, a versioned first-pass prompt builder, provider interfaces, fake and Anthropic providers, conservative deduplication, configuration, and an extraction service.
+- Added `revenue_segment_extractor/extraction/` with strict Pydantic output schemas, a versioned first-pass prompt builder, provider interfaces, fake and Anthropic providers, conservative deduplication, configuration, and an extraction service.
 - Added `scripts/extract_revenue_segments.py` to run extraction for an already ingested document.
 - Added repository helpers to create segment evidence and validation issues.
 - Added an API-facing `ExtractionSummaryResponse`.
@@ -1659,7 +1720,7 @@ python scripts/ingest_pdf.py /path/to/annual-report.pdf --company-name "Example 
 python scripts/extract_revenue_segments.py doc_... --provider fake
 ```
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps the hybrid pipeline intact: PDF parsing and candidate ranking happen before LLM extraction.
 - Uses strict Pydantic schemas for LLM output and converts invalid output into validation issues.
@@ -1704,12 +1765,12 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 For the stored Alliander document, extraction candidate selection should produce pages `[256, 257]`, and the prompt bundle should contain pages 256/257 with no page 161 or page 258.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Preserves the hybrid pipeline by keeping deterministic retrieval before LLM calls.
 - Improves first-pass extraction precision without reducing parsed page storage.
@@ -1720,7 +1781,7 @@ For the stored Alliander document, extraction candidate selection should produce
 
 ### What changed
 
-- Added `fitch_extractor/extraction/json_response.py` to extract the first complete JSON object from provider responses before strict Pydantic validation.
+- Added `revenue_segment_extractor/extraction/json_response.py` to extract the first complete JSON object from provider responses before strict Pydantic validation.
 - The parser accepts plain JSON, JSON wrapped in Markdown code fences, and JSON preceded/followed by short provider prose.
 - Truly empty, non-JSON, or incomplete JSON responses still create `llm_output_validation` issues and do not persist rows.
 - Added an Anthropic system instruction requiring a single JSON object with no Markdown or prose.
@@ -1739,7 +1800,7 @@ The Anthropic run returned content that failed at JSON parsing before schema val
 ### Tradeoffs remaining
 
 - Responses with no JSON object are still rejected.
-- Incomplete JSON from token truncation is still rejected; increase `FITCH_EXTRACTION_MAX_TOKENS` if that appears.
+- Incomplete JSON from token truncation is still rejected; increase `RSE_EXTRACTION_MAX_TOKENS` if that appears.
 - The parser extracts the first complete JSON object, so providers must still return one object matching `RevenueExtractionOutput`.
 
 ### How to test or verify the change
@@ -1748,12 +1809,12 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 Then rerun extraction for the ingested document. Markdown-wrapped JSON should now validate and persist rows; non-JSON responses should remain visible as validation issues.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps strict schemas as the source of truth for extraction output.
 - Handles provider formatting errors without crashing the app.
@@ -1792,12 +1853,12 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 Then rerun extraction after clearing prior partial rows or resetting/reingesting the document. For Alliander page 257, the expected current-period segment names are `Network operator Liander`, `Other`, `Eliminations`, `Total`, `Reclassification to reported and incidental items`, and `Reported`.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps first-pass extraction reviewable and evidence-linked.
 - Preserves raw table values exactly, including dash cells.
@@ -1842,12 +1903,12 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 For the stored batch data, candidate selection should now exclude Swiss Prime Site page 219, Citi page 10, and JPMorgan page 199; Commerzbank page 391 should prompt with page 392.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps deterministic retrieval before LLM calls while making extraction prompts more precise.
 - Reduces hallucinated rows from TOC and non-revenue pages.
@@ -1860,7 +1921,7 @@ For the stored batch data, candidate selection should now exclude Swiss Prime Si
 
 - Replaced the partial hard-coded multilingual candidate filter expansion with a structural extraction fallback based on parsed table shape and numeric density.
 - Tightened the first-pass prompt to explicitly handle any document language or regional reporting format through semantic table and note interpretation.
-- Added `fitch_extractor/extraction/periods.py` to keep only the latest detected reporting year after strict LLM schema validation.
+- Added `revenue_segment_extractor/extraction/periods.py` to keep only the latest detected reporting year after strict LLM schema validation.
 - Applied latest-year filtering across accepted rows from all page bundles before deduplication and persistence.
 - Added tests for structural candidate eligibility, latest-year filtering, and prior-period row skipping before persistence.
 
@@ -1890,12 +1951,12 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 Manual verification should use fake extraction first, then Anthropic only when credentials are configured. A multi-year provider response should persist only rows for the latest detected year and record a `prior_period_row_skipped` validation issue.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Avoids hard-coded page numbers, document names, and language-specific keyword expansions in extraction gating.
 - Uses LLM semantic interpretation where deterministic rules are weak, while keeping strict schemas and Python validation after the model call.
@@ -1929,7 +1990,7 @@ The TOC fix keeps true TOC/index pages excluded while allowing SEC-style filings
 
 - Metric alignment only applies when the same parsed page exposes a clear preferred metric row. It does not guess across unrelated pages.
 - Primary table selection may suppress later duplicate detail tables; skipped rows are visible as validation issues for review.
-- The comparison script could only be run in fake-provider mode in this shell because Anthropic credentials were not present. A real acceptance run still needs `FITCH_EXTRACTION_PROVIDER=anthropic` and `ANTHROPIC_API_KEY`.
+- The comparison script could only be run in fake-provider mode in this shell because Anthropic credentials were not present. A real acceptance run still needs `RSE_EXTRACTION_PROVIDER=anthropic` and `ANTHROPIC_API_KEY`.
 
 ### How to test or verify the change
 
@@ -1937,18 +1998,18 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 With Anthropic credentials configured, run:
 
 ```bash
-FITCH_EXTRACTION_PROVIDER=anthropic python compare_extractions_to_ground_truth.py
+RSE_EXTRACTION_PROVIDER=anthropic python compare_extractions_to_ground_truth.py
 ```
 
 Expected improvements are: Alphabet page 88 should no longer be blocked as a TOC page, Ørsted and Alliander should use total revenue/income values, and Citi/SAR duplicate secondary tables should be suppressed.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Preserves deterministic parsing and retrieval before LLM calls.
 - Uses strict schemas followed by Python validation and normalization before database writes.
@@ -1984,18 +2045,18 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 With Anthropic credentials configured, rerun:
 
 ```bash
-FITCH_EXTRACTION_PROVIDER=anthropic python compare_extractions_to_ground_truth.py
+RSE_EXTRACTION_PROVIDER=anthropic python compare_extractions_to_ground_truth.py
 ```
 
 The Ørsted extra row with `segment_name = "Revenue"` should no longer persist.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps first-pass extraction focused on business/reportable/operating segments and valid segment-table totals.
 - Applies Python validation after strict LLM output validation and before persistence.
@@ -2036,12 +2097,12 @@ Run:
 
 ```bash
 python -m unittest discover -s tests
-python -m compileall fitch_extractor scripts tests
+python -m compileall revenue_segment_extractor scripts tests
 ```
 
 For a document whose initial candidates produce no rows, rerun extraction with Anthropic enabled and confirm that any discovered pages still persist rows only through the standard first-pass schema and validation path.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Avoids hardcoded language-specific retrieval rules.
 - Uses deterministic parsing before LLM calls and strict schemas after LLM calls.
@@ -2079,7 +2140,7 @@ Verification and arbitration results are stored as `ValidationIssue` records ins
 - Declared segment coverage is heuristic and depends on parsed table structure.
 - Total reconciliation handles explicit totals and common reconciliation rows, but complex issuer-specific bridges may still need human review.
 - Verification and arbitration are optional and require configured providers; tests use fake providers only.
-- Confidence is a prototype score for review prioritization, not a final Fitch scoring model.
+- Confidence is a prototype score for review prioritization, not a final Revenue Segment scoring model.
 - Existing SQLite databases are not migrated for historical status values; old `pending` rows still block export until reviewed.
 
 ### How to test or verify the change
@@ -2088,7 +2149,7 @@ Run:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor scripts tests
 ```
 
 Manual verification:
@@ -2100,7 +2161,7 @@ python scripts/extract_revenue_segments.py doc_... --provider fake
 
 Inspect the JSON output for `ready_for_review` or `needs_review` rows and validation issues such as normalization warnings, metric rejections, reconciliation mismatches, or verifier rationale.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps deterministic parsing/retrieval before LLM extraction.
 - Uses strict schemas for first-pass extraction, verification, and arbitration outputs.
@@ -2146,7 +2207,7 @@ Run:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
@@ -2157,7 +2218,7 @@ streamlit run streamlit_app.py
 
 Upload or select a document, run analysis, edit a row, approve/reject rows, acknowledge or resolve validation issues, then approve the document. Export controls should remain disabled until document approval succeeds.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Makes human review the final quality gate before export.
 - Lets analysts inspect evidence, correct fields, reject false positives, add missing segments, and add notes.
@@ -2200,13 +2261,13 @@ Run:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor compare_extractions_to_ground_truth.py streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor compare_extractions_to_ground_truth.py streamlit_app.py scripts tests
 ./.venv/bin/python compare_extractions_to_ground_truth.py
 ```
 
-For Anthropic-backed comparison, run the last command with the same `FITCH_EXTRACTION_PROVIDER` and API credentials used for extraction.
+For Anthropic-backed comparison, run the last command with the same `RSE_EXTRACTION_PROVIDER` and API credentials used for extraction.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Improves deterministic normalization after strict LLM extraction.
 - Keeps false-positive blocking for non-revenue metrics while allowing valid revenue reconciliation rows.
@@ -2217,7 +2278,7 @@ For Anthropic-backed comparison, run the last command with the same `FITCH_EXTRA
 
 ### What changed
 
-- Added `fitch_extractor/exporting/` with an `ExportService` that writes CSV, XLSX, and JSON audit exports.
+- Added `revenue_segment_extractor/exporting/` with an `ExportService` that writes CSV, XLSX, and JSON audit exports.
 - Added a backend-facing `export_reviewed_document` handler and `DocumentExportResponse` schema.
 - Updated Streamlit export controls to create local files through the export service and show the latest persisted export path/timestamp.
 - Added export tests for CSV columns, JSON audit content, review-gate blocking, rejected-row exclusion, XLSX creation, and persisted export records.
@@ -2251,7 +2312,7 @@ Run:
 ```bash
 python -m unittest tests.test_export_service
 python -m unittest discover -s tests
-python -m compileall fitch_extractor streamlit_app.py scripts tests
+python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification in Streamlit:
@@ -2262,7 +2323,7 @@ streamlit run streamlit_app.py
 
 Review rows, approve/reject each row, approve the document, then click `Create export files`. Confirm `exports/{document_id}/revenue_segments.csv`, `revenue_segments.xlsx`, and `audit_export.json` exist and that the UI shows the latest export path and timestamp.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Blocks final export until human review and document approval are complete.
 - Excludes rejected rows from main CSV/XLSX outputs while preserving them in the JSON audit export.
@@ -2275,7 +2336,7 @@ Review rows, approve/reject each row, approve the document, then click `Create e
 ### What changed
 
 - Copied the NACE Rev.2 outline CSV into `reference/NACE_Rev2_Outline.csv`.
-- Added `fitch_extractor/nace/` for reference loading, deterministic candidate retrieval, optional LLM reranking, and segment mapping orchestration.
+- Added `revenue_segment_extractor/nace/` for reference loading, deterministic candidate retrieval, optional LLM reranking, and segment mapping orchestration.
 - Added `NaceSelection` plus SQLite storage in `segment_nace_selections`.
 - Extended repository/review services to persist top-three candidates, accept candidates, and record reviewer overrides as `ReviewEvent` rows.
 - Added NACE candidates and selections to review-state/API-facing schemas.
@@ -2311,7 +2372,7 @@ Run:
 ```bash
 .venv/bin/python -m unittest tests.test_nace_mapping
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py tests
 ```
 
 Manual UI verification:
@@ -2322,7 +2383,7 @@ streamlit run streamlit_app.py
 
 Select or upload a document, run NACE mapping, choose a segment row, inspect the NACE candidates, accept one or save an override, then create exports after normal review approval.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps NACE mapping behind deterministic parsing/retrieval rather than a single prompt.
 - Uses strict LLM output validation and rejects invented codes outside the reference candidate set.
@@ -2366,7 +2427,7 @@ Run:
 ```bash
 .venv/bin/python -m unittest tests.test_verification_arbitration
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
@@ -2379,7 +2440,7 @@ Manual verification:
 
 Then inspect validation issues for `llm_opus_arbitration_result` only on documents with validation or verification failures.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Uses Opus only for difficult cases instead of every document.
 - Keeps deterministic normalization and validation before model escalation.
@@ -2391,7 +2452,7 @@ Then inspect validation issues for `llm_opus_arbitration_result` only on documen
 
 ### What changed
 
-- Added `fitch_extractor/ingestion/fallbacks.py` with a page-text fallback provider interface, local Tesseract CLI OCR provider, callable vision/text adapters, settings from environment, and a fake provider for tests.
+- Added `revenue_segment_extractor/ingestion/fallbacks.py` with a page-text fallback provider interface, local Tesseract CLI OCR provider, callable vision/text adapters, settings from environment, and a fake provider for tests.
 - Updated PDF parsing to detect low-text pages, run optional fallback only for those pages, store fallback text with `parser_sources` such as `ocr` or `vision`, and record fallback status in `blocks_json.text_fallback`.
 - Added synthetic fallback text blocks so evidence lookup can persist fallback parser sources.
 - Added lightweight page-language marking for common English, Spanish, French, German, Italian, and Portuguese revenue/segment pages.
@@ -2428,21 +2489,21 @@ Run:
 ```bash
 .venv/bin/python -m unittest tests.test_pdf_ingestion tests.test_revenue_extraction
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor streamlit_app.py scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor streamlit_app.py scripts tests
 ```
 
 Manual verification:
 
 ```bash
-FITCH_ENABLE_PAGE_TEXT_FALLBACK=true \
-FITCH_PAGE_TEXT_FALLBACK_PROVIDER=ocr \
-FITCH_OCR_COMMAND=tesseract \
+RSE_ENABLE_PAGE_TEXT_FALLBACK=true \
+RSE_PAGE_TEXT_FALLBACK_PROVIDER=ocr \
+RSE_OCR_COMMAND=tesseract \
 .venv/bin/python scripts/ingest_pdf.py /path/to/scanned-report.pdf --company-name "Example Corp"
 ```
 
 Then open Streamlit, select the document, inspect evidence for rows extracted from low-text pages, and confirm the warning appears for `ocr` or `vision` evidence.
 
-### How this supports the Fitch project requirements
+### How this supports the platform requirements
 
 - Keeps deterministic PDF parsing and retrieval before LLM extraction.
 - Makes OCR/vision fallback opt-in and fakeable for local tests.

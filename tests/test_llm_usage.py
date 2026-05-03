@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import unittest
 
-from fitch_extractor.extraction.providers import (
+from revenue_segment_extractor.extraction.providers import (
     LLMExtractionRequest,
     LLMExtractionResponse,
     LLMProviderError,
 )
-from fitch_extractor.extraction.usage import (
+from revenue_segment_extractor.extraction.usage import (
     TrackedLLMProvider,
     WorkflowUsageTracker,
     estimate_tokens,

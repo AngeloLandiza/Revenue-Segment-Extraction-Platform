@@ -10,7 +10,7 @@ from pathlib import Path
 
 import fitz
 
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.persistence import (
     ReviewService,
     SQLiteRepository,
     connect_database,
@@ -25,7 +25,7 @@ class CliSmokeTest(unittest.TestCase):
     def test_cli_happy_path_ingest_extract_review_and_export(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
-            db_path = temp_path / "fitch.sqlite3"
+            db_path = temp_path / "revenue_segment.sqlite3"
             pdf_path = temp_path / "sample-10k.pdf"
             export_root = temp_path / "exports"
             _write_sample_pdf(pdf_path)
@@ -35,7 +35,7 @@ class CliSmokeTest(unittest.TestCase):
                 "scripts/ingest_pdf.py",
                 str(pdf_path),
                 "--company-name",
-                "Example Fitch Co.",
+                "Example Demo Co.",
                 "--fiscal-period",
                 "FY2025",
                 "--currency",
@@ -98,12 +98,12 @@ class CliSmokeTest(unittest.TestCase):
 
     def test_export_cli_blocks_unapproved_documents(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            db_path = Path(temp_dir) / "fitch.sqlite3"
+            db_path = Path(temp_dir) / "revenue_segment.sqlite3"
             connection = connect_database(db_path)
             try:
                 initialize_database(connection)
                 document = SQLiteRepository(connection).create_document(
-                    company_name="Example Fitch Co.",
+                    company_name="Example Demo Co.",
                     document_name="annual-report.pdf",
                     source_path="annual-report.pdf",
                     fiscal_period="FY2025",
@@ -151,7 +151,7 @@ def _write_sample_pdf(path: Path) -> None:
     page = document.new_page(width=612, height=792)
     page.insert_text(
         (72, 72),
-        "Example Fitch Co. Annual Report\nFinancial statements\nNote 4 - Operating Segments",
+        "Example Demo Co. Annual Report\nFinancial statements\nNote 4 - Operating Segments",
     )
     page.insert_text((72, 120), "Revenue by segment and external revenue, USD millions")
     _draw_table(

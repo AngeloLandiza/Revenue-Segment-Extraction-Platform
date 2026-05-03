@@ -4,7 +4,7 @@ import unittest
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
-from fitch_extractor.models import (
+from revenue_segment_extractor.models import (
     DOCUMENT_STATUS_APPROVED,
     ExportRecord,
     SEGMENT_STATUS_APPROVED,
@@ -12,13 +12,13 @@ from fitch_extractor.models import (
     VALIDATION_ISSUE_STATUS_ACKNOWLEDGED,
     VALIDATION_ISSUE_STATUS_RESOLVED,
 )
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.persistence import (
     ReviewService,
     SQLiteRepository,
     connect_database,
     initialize_database,
 )
-from fitch_extractor.ui.review import (
+from revenue_segment_extractor.ui.review import (
     build_review_tasks,
     build_pipeline_steps,
     changed_segment_rows,
@@ -441,7 +441,7 @@ class ReviewWorkflowTest(unittest.TestCase):
 
     def _create_document(self):
         return self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
             fiscal_period="FY2025",

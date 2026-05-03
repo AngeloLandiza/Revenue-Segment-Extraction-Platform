@@ -9,8 +9,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from fitch_extractor.ingestion import PdfIngestionService
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.ingestion import PdfIngestionService
+from revenue_segment_extractor.persistence import (
     DEFAULT_DATABASE_PATH,
     SQLiteRepository,
     connect_database,
@@ -20,7 +20,7 @@ from fitch_extractor.persistence import (
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Register and parse a Fitch source PDF into local SQLite storage."
+        description="Register and parse a source PDF into local SQLite storage."
     )
     parser.add_argument("pdf_path", help="Annual report or 10-K PDF path.")
     parser.add_argument(
@@ -43,7 +43,7 @@ def main() -> None:
     parser.add_argument(
         "--database",
         default=str(DEFAULT_DATABASE_PATH),
-        help="SQLite database path. Defaults to data/fitch_extractor.sqlite3.",
+        help="SQLite database path. Defaults to data/revenue_segment_extractor.sqlite3.",
     )
     args = parser.parse_args()
 

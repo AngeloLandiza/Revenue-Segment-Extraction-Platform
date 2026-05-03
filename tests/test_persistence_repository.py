@@ -6,7 +6,7 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 
-from fitch_extractor.models import (
+from revenue_segment_extractor.models import (
     DOCUMENT_STATUS_APPROVED,
     QUEUE_STATUS_COMPLETED,
     QUEUE_STATUS_PENDING,
@@ -20,7 +20,7 @@ from fitch_extractor.models import (
     SegmentScore,
     ValidationIssue,
 )
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.persistence import (
     ReviewService,
     SQLiteRepository,
     connect_database,
@@ -64,7 +64,7 @@ class SQLiteRepositoryTest(unittest.TestCase):
 
     def test_create_read_update_document_flow(self) -> None:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
             fiscal_period="FY2025",
@@ -137,7 +137,7 @@ class SQLiteRepositoryTest(unittest.TestCase):
 
     def test_create_read_update_segment_row_flow(self) -> None:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
         )
@@ -173,7 +173,7 @@ class SQLiteRepositoryTest(unittest.TestCase):
 
     def test_persists_related_entities_for_pipeline_state(self) -> None:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
         )
@@ -271,7 +271,7 @@ class SQLiteRepositoryTest(unittest.TestCase):
 
     def test_create_and_clear_parsed_outputs(self) -> None:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
         )
@@ -304,7 +304,7 @@ class SQLiteRepositoryTest(unittest.TestCase):
 
     def test_review_event_logging_updates_segment_status(self) -> None:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
         )
@@ -333,7 +333,7 @@ class SQLiteRepositoryTest(unittest.TestCase):
 
     def test_export_record_requires_reviewed_segments(self) -> None:
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
         )
@@ -368,7 +368,7 @@ class SQLiteRepositoryTest(unittest.TestCase):
 
     def test_initialize_and_reset_database_file(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            database_path = Path(temp_dir) / "fitch.sqlite3"
+            database_path = Path(temp_dir) / "revenue_segment.sqlite3"
 
             initialize_database_file(database_path)
             self.assertTrue(database_path.exists())

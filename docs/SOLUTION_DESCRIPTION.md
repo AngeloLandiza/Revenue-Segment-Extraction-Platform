@@ -11,19 +11,19 @@
 7. ESG extraction uses deterministic ESG page retrieval, strict LLM output, and conservative segment linking. Company-wide ESG is not copied to all segments.
 8. `ReviewService` logs edits, approvals, rejections, validation issue actions, NACE actions, ESG actions, and document approval.
 9. `ExportService` blocks export until document approval and row review are complete, excludes rejected rows from the final CSV/XLSX, and writes a full audit JSON.
-10. `fitch_extractor.evaluate` compares reviewed exports to labeled gold files and writes summary, row-level, and failure-analysis reports.
+10. `revenue_segment_extractor.evaluate` compares reviewed exports to labeled gold files and writes summary, row-level, and failure-analysis reports.
 
 ## Code, Prompts, And Tool Configuration
 
-- PDF parsing: `fitch_extractor/ingestion/`.
-- Revenue extraction service: `fitch_extractor/extraction/service.py`.
-- Prompt templates: `fitch_extractor/extraction/prompts.py` and `docs/PROMPTS.md`.
-- Strict schemas: `fitch_extractor/extraction/schemas.py`.
-- Normalization and validation: `fitch_extractor/extraction/normalization.py` and `validation.py`.
-- Review and export gates: `fitch_extractor/persistence/review.py` and `fitch_extractor/exporting/service.py`.
+- PDF parsing: `revenue_segment_extractor/ingestion/`.
+- Revenue extraction service: `revenue_segment_extractor/extraction/service.py`.
+- Prompt templates: `revenue_segment_extractor/extraction/prompts.py` and `docs/PROMPTS.md`.
+- Strict schemas: `revenue_segment_extractor/extraction/schemas.py`.
+- Normalization and validation: `revenue_segment_extractor/extraction/normalization.py` and `validation.py`.
+- Review and export gates: `revenue_segment_extractor/persistence/review.py` and `revenue_segment_extractor/exporting/service.py`.
 - NACE reference data: `reference/NACE_Rev2_Outline.csv`.
 - Scoring config: `config/scoring_rules.yaml`.
-- Provider selection: `FITCH_EXTRACTION_PROVIDER=anthropic` for real LLM calls or `fake` for deterministic smoke tests.
+- Provider selection: `RSE_EXTRACTION_PROVIDER=anthropic` for real LLM calls or `fake` for deterministic smoke tests.
 
 ## Running On New Documents
 

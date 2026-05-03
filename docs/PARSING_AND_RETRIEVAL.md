@@ -2,11 +2,11 @@
 
 ## Scope
 
-The ingestion layer parses annual report and 10-K PDFs into deterministic page records before any LLM extraction. LLM extraction is implemented separately in `fitch_extractor/extraction/`; ingestion does not implement review UI, ESG extraction, NACE mapping, scoring, or final exports.
+The ingestion layer parses annual report and 10-K PDFs into deterministic page records before any LLM extraction. LLM extraction is implemented separately in `revenue_segment_extractor/extraction/`; ingestion does not implement review UI, ESG extraction, NACE mapping, scoring, or final exports.
 
 ## Parser Responsibilities
 
-`fitch_extractor.ingestion.parse_pdf()` uses:
+`revenue_segment_extractor.ingestion.parse_pdf()` uses:
 
 - PyMuPDF for page text, text blocks, page dimensions, bounding boxes, and page rendering support.
 - pdfplumber for table detection, extracted table text, and cell-level table structure where available.
@@ -27,10 +27,10 @@ Weak/no-text pages are marked `has_text = false` when PyMuPDF extracts fewer tha
 Fallback is disabled by default. Enable it with:
 
 ```bash
-FITCH_ENABLE_PAGE_TEXT_FALLBACK=true
-FITCH_PAGE_TEXT_FALLBACK_PROVIDER=ocr
-FITCH_OCR_COMMAND=tesseract
-FITCH_OCR_LANGUAGES=eng
+RSE_ENABLE_PAGE_TEXT_FALLBACK=true
+RSE_PAGE_TEXT_FALLBACK_PROVIDER=ocr
+RSE_OCR_COMMAND=tesseract
+RSE_OCR_LANGUAGES=eng
 ```
 
 The local OCR provider shells out to an installed OCR command and does not add a mandatory Python dependency. Tests use `FakePageTextFallbackProvider`. Vision/PDF providers can be supplied through the same provider interface and should set `parser_source = "vision"`.

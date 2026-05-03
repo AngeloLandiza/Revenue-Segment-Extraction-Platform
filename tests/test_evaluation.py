@@ -7,7 +7,7 @@ import unittest
 from decimal import Decimal
 from pathlib import Path
 
-from fitch_extractor.evaluation import (
+from revenue_segment_extractor.evaluation import (
     DocumentEvaluationContext,
     GoldRow,
     MatchThresholds,

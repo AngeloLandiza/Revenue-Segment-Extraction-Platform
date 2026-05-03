@@ -4,7 +4,7 @@
 
 The repository includes automated coverage for ingestion, deterministic candidate selection, fake-provider extraction, normalization, validation, review gating, NACE mapping, ESG extraction, scoring, exports, and evaluation report generation.
 
-No labeled production gold set is included in this checkout, so extraction success rate should be reported from `python -m fitch_extractor.evaluate` after running reviewed exports against class-provided or manually labeled gold files.
+No labeled production gold set is included in this checkout, so extraction success rate should be reported from `python -m revenue_segment_extractor.evaluate` after running reviewed exports against class-provided or manually labeled gold files.
 
 ## Metrics To Report
 

@@ -10,13 +10,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from fitch_extractor.extraction import (
+from revenue_segment_extractor.extraction import (
     ExtractionSettings,
     LLMProviderError,
     RevenueExtractionService,
     create_provider,
 )
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.persistence import (
     DEFAULT_DATABASE_PATH,
     SQLiteRepository,
     connect_database,
@@ -31,19 +31,19 @@ def main() -> None:
     parser.add_argument("document_id", help="Document ID created by scripts/ingest_pdf.py.")
     parser.add_argument(
         "--provider",
-        help="Extraction provider: fake or anthropic. Defaults to FITCH_EXTRACTION_PROVIDER or anthropic.",
+        help="Extraction provider: fake or anthropic. Defaults to RSE_EXTRACTION_PROVIDER or anthropic.",
     )
     parser.add_argument(
         "--model",
-        help="Model name. Defaults to FITCH_EXTRACTION_MODEL or the configured fallback.",
+        help="Model name. Defaults to RSE_EXTRACTION_MODEL or the configured fallback.",
     )
     parser.add_argument(
         "--verification-model",
-        help="Second-pass verification model. Defaults to FITCH_VERIFICATION_MODEL or the extraction model.",
+        help="Second-pass verification model. Defaults to RSE_VERIFICATION_MODEL or the extraction model.",
     )
     parser.add_argument(
         "--arbitration-model",
-        help="Arbitration model. Defaults to FITCH_ARBITRATION_MODEL or the extraction model.",
+        help="Arbitration model. Defaults to RSE_ARBITRATION_MODEL or the extraction model.",
     )
     parser.add_argument(
         "--disable-verification",
@@ -68,7 +68,7 @@ def main() -> None:
     parser.add_argument(
         "--database",
         default=str(DEFAULT_DATABASE_PATH),
-        help="SQLite database path. Defaults to data/fitch_extractor.sqlite3.",
+        help="SQLite database path. Defaults to data/revenue_segment_extractor.sqlite3.",
     )
     args = parser.parse_args()
 

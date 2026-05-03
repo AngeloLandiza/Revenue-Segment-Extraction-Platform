@@ -16,7 +16,7 @@ python scripts/extract_revenue_segments.py doc_... --provider fake
 ESG extraction is currently exposed through the Python service layer and Streamlit controls, not an HTTP route:
 
 ```python
-from fitch_extractor.extraction import EsgExtractionService, create_provider
+from revenue_segment_extractor.extraction import EsgExtractionService, create_provider
 
 summary = EsgExtractionService(repository, create_provider("fake")).extract_document(document_id)
 ```
@@ -24,14 +24,14 @@ summary = EsgExtractionService(repository, create_provider("fake")).extract_docu
 Prototype scoring is currently exposed through the Python service layer, Streamlit scoring tab, and export service, not an HTTP route:
 
 ```python
-from fitch_extractor.scoring import ScoringService
+from revenue_segment_extractor.scoring import ScoringService
 
 result = ScoringService(repository).score_document(document_id)
 ```
 
 ## Current API-Facing Schemas
 
-Implemented in `fitch_extractor/api/schemas.py`:
+Implemented in `revenue_segment_extractor/api/schemas.py`:
 
 - `DocumentResponse`
 - `ParsedPageResponse`
@@ -210,7 +210,7 @@ If initial deterministic candidate windows produce no accepted rows, extraction 
 There is still no HTTP framework in this repository. The backend-facing export entrypoint is:
 
 ```python
-from fitch_extractor.api.exports import export_reviewed_document
+from revenue_segment_extractor.api.exports import export_reviewed_document
 
 response = export_reviewed_document(repository, document_id)
 ```

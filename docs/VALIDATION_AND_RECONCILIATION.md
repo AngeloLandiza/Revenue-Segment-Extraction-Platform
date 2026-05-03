@@ -8,7 +8,7 @@ This layer does not implement NACE mapping, ESG extraction, scoring, or final ex
 
 ## Normalization
 
-Implemented in `fitch_extractor/extraction/normalization.py`.
+Implemented in `revenue_segment_extractor/extraction/normalization.py`.
 
 The normalizer preserves raw row values and stores warnings for ambiguous or failed normalization. It handles:
 
@@ -24,7 +24,7 @@ If a dash must mean zero, callers must explicitly pass context that allows it. T
 
 ## Deterministic Checks
 
-Implemented in `fitch_extractor/extraction/validation.py`.
+Implemented in `revenue_segment_extractor/extraction/validation.py`.
 
 Checks include:
 
@@ -59,7 +59,7 @@ A mismatch creates `total_reconciliation_mismatch` and forces human review.
 
 ## Confidence
 
-Implemented in `fitch_extractor/extraction/confidence.py`.
+Implemented in `revenue_segment_extractor/extraction/confidence.py`.
 
 Row confidence combines:
 
@@ -74,9 +74,9 @@ The score is stored on `SegmentRow.confidence`.
 
 ## Verification and Opus Arbitration
 
-Second-pass verification is implemented in `fitch_extractor/extraction/verification.py`. It runs only when validation creates warning or error issues and a verification provider is configured.
+Second-pass verification is implemented in `revenue_segment_extractor/extraction/verification.py`. It runs only when validation creates warning or error issues and a verification provider is configured.
 
-LLM arbitration is implemented in `fitch_extractor/extraction/arbitration.py`. It runs only when deterministic validation or second-pass verification fails, arbitration is enabled, and an arbitration provider is configured. The arbitration model defaults to the extraction model and is separately configurable through `FITCH_ARBITRATION_MODEL`.
+LLM arbitration is implemented in `revenue_segment_extractor/extraction/arbitration.py`. It runs only when deterministic validation or second-pass verification fails, arbitration is enabled, and an arbitration provider is configured. The arbitration model defaults to the extraction model and is separately configurable through `RSE_ARBITRATION_MODEL`.
 
 Both paths use strict Pydantic schemas and fakeable providers. Results and rationale are stored as `ValidationIssue` records. Arbitration keeps the existing `llm_opus_arbitration_*` issue type names for backwards compatibility and is skipped for clean documents.
 
@@ -86,5 +86,5 @@ Run:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
-.venv/bin/python -m compileall fitch_extractor scripts tests
+.venv/bin/python -m compileall revenue_segment_extractor scripts tests
 ```

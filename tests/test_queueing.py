@@ -3,11 +3,11 @@ from __future__ import annotations
 import unittest
 from unittest.mock import patch
 
-from fitch_extractor.extraction.usage import WorkflowUsageTracker
-from fitch_extractor.models import QUEUE_STATUS_COMPLETED, QUEUE_STATUS_FAILED
-from fitch_extractor.persistence import SQLiteRepository, connect_database, initialize_database
-from fitch_extractor.queueing import DocumentQueueService
-from fitch_extractor.workflow import DocumentAnalysisResult
+from revenue_segment_extractor.extraction.usage import WorkflowUsageTracker
+from revenue_segment_extractor.models import QUEUE_STATUS_COMPLETED, QUEUE_STATUS_FAILED
+from revenue_segment_extractor.persistence import SQLiteRepository, connect_database, initialize_database
+from revenue_segment_extractor.queueing import DocumentQueueService
+from revenue_segment_extractor.workflow import DocumentAnalysisResult
 
 
 class DocumentQueueServiceTest(unittest.TestCase):
@@ -17,7 +17,7 @@ class DocumentQueueServiceTest(unittest.TestCase):
         self.repository = SQLiteRepository(self.connection)
         self.service = DocumentQueueService(self.repository)
         self.document = self.repository.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
         )

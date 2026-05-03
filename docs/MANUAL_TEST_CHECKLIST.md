@@ -5,7 +5,7 @@
 - [ ] Create and activate a virtual environment.
 - [ ] Install `requirements.txt`.
 - [ ] Run `scripts/manage_db.py`.
-- [ ] Set `ANTHROPIC_API_KEY` for real extraction or `FITCH_EXTRACTION_PROVIDER=fake` for smoke testing.
+- [ ] Set `ANTHROPIC_API_KEY` for real extraction or `RSE_EXTRACTION_PROVIDER=fake` for smoke testing.
 
 ## Upload
 
@@ -49,6 +49,6 @@
 
 ## Evaluation
 
-- [ ] Run `python -m fitch_extractor.evaluate --gold ... --pred exports`.
+- [ ] Run `python -m revenue_segment_extractor.evaluate --gold ... --pred exports`.
 - [ ] Open `reports/evaluation_summary.md`.
 - [ ] Open `reports/failure_analysis.md`.

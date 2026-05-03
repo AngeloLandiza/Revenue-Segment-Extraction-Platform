@@ -8,20 +8,20 @@ from pathlib import Path
 
 import streamlit as st
 
-from fitch_extractor.extraction import (
+from revenue_segment_extractor.extraction import (
     EsgExtractionService,
     ExtractionSettings,
     create_provider,
 )
-from fitch_extractor.extraction.providers import LLMProviderError
-from fitch_extractor.extraction.usage import TrackedLLMProvider, WorkflowUsageTracker
-from fitch_extractor.exporting import ExportService
-from fitch_extractor.ingestion import (
+from revenue_segment_extractor.extraction.providers import LLMProviderError
+from revenue_segment_extractor.extraction.usage import TrackedLLMProvider, WorkflowUsageTracker
+from revenue_segment_extractor.exporting import ExportService
+from revenue_segment_extractor.ingestion import (
     PdfIngestionService,
     locate_evidence_snippet,
     render_page_with_bbox_to_png,
 )
-from fitch_extractor.models import (
+from revenue_segment_extractor.models import (
     DOCUMENT_STATUS_APPROVED,
     EsgFactor,
     ExportRecord,
@@ -36,19 +36,19 @@ from fitch_extractor.models import (
     VALIDATION_ISSUE_STATUS_ACKNOWLEDGED,
     VALIDATION_ISSUE_STATUS_RESOLVED,
 )
-from fitch_extractor.nace import NaceMappingService
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.nace import NaceMappingService
+from revenue_segment_extractor.persistence import (
     DEFAULT_DATABASE_PATH,
     ReviewService,
     SQLiteRepository,
     connect_database,
     initialize_database,
 )
-from fitch_extractor.persistence.review import DocumentReviewState
-from fitch_extractor.persistence.review import REVIEWED_ESG_STATUSES
-from fitch_extractor.queueing import DocumentQueueService
-from fitch_extractor.scoring import ScoringService
-from fitch_extractor.ui.review import (
+from revenue_segment_extractor.persistence.review import DocumentReviewState
+from revenue_segment_extractor.persistence.review import REVIEWED_ESG_STATUSES
+from revenue_segment_extractor.queueing import DocumentQueueService
+from revenue_segment_extractor.scoring import ScoringService
+from revenue_segment_extractor.ui.review import (
     build_pipeline_steps,
     build_review_tasks,
     build_summary_cards,
@@ -65,7 +65,7 @@ from fitch_extractor.ui.review import (
 
 UPLOAD_DIR = Path("data/uploads")
 EVIDENCE_PREVIEW_DIR = Path("data/evidence_previews")
-REVIEWER_PLACEHOLDER = "analyst@sustainablefitch.com"
+REVIEWER_PLACEHOLDER = "analyst@example.com"
 AUTO_APPROVE_NOTE = "Auto-approved in Streamlit review after two-step confirmation."
 EXPORT_DOWNLOADS = {
     "csv": ("CSV", "text/csv"),
@@ -80,10 +80,10 @@ WORKFLOW_USAGE_SESSION_KEY = "workflow_usage_by_document"
 
 
 def main() -> None:
-    st.set_page_config(page_title="Fitch Revenue Segment Review", layout="wide")
+    st.set_page_config(page_title="Revenue Segment Review", layout="wide")
     st.title("Revenue Segment Review Workbench")
     st.caption(
-        "For Sustainable Fitch analysts reviewing annual reports, segment revenue, "
+        "For analysts reviewing annual reports, segment revenue, "
         "source evidence, NACE classification, ESG factors, and export readiness."
     )
 
@@ -1142,8 +1142,7 @@ def _locate_esg_evidence_bbox(page: ParsedPage, evidence_text: str) -> dict | No
 def _render_scoring_panel(repository: SQLiteRepository, state: DocumentReviewState) -> None:
     _section_header("scoring", "Prototype Scoring")
     st.warning(
-        "Prototype demo score only. This is not an official Fitch Ratings or "
-        "Sustainable Fitch score."
+        "Prototype demo score only. This is not an official rating or sustainability score."
     )
     if state.pending_row_count:
         st.info("Scores include approved or edited segment rows only. Pending rows are excluded.")

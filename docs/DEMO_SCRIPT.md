@@ -39,7 +39,7 @@ Show `exports/<document_id>/revenue_segments.csv`, `revenue_segments.xlsx`, and 
 8. Show evaluation:
 
 ```bash
-.venv/bin/python -m fitch_extractor.evaluate --gold 'data/gold/*.csv' --pred exports
+.venv/bin/python -m revenue_segment_extractor.evaluate --gold 'data/gold/*.csv' --pred exports
 ```
 
 Open `reports/evaluation_summary.md` and `reports/failure_analysis.md`.

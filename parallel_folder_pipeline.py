@@ -11,16 +11,16 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
-from fitch_extractor.extraction import (
+from revenue_segment_extractor.extraction import (
     ExtractionSettings,
     EsgExtractionService,
     LLMProviderError,
     RevenueExtractionService,
     create_provider,
 )
-from fitch_extractor.ingestion import PdfIngestionService
-from fitch_extractor.nace import NaceMappingService
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.ingestion import PdfIngestionService
+from revenue_segment_extractor.nace import NaceMappingService
+from revenue_segment_extractor.persistence import (
     DEFAULT_DATABASE_PATH,
     SQLiteRepository,
     connect_database,
@@ -254,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help=(
             "Provider key passed to create_provider() "
-            "(default: FITCH_EXTRACTION_PROVIDER or project default)."
+            "(default: RSE_EXTRACTION_PROVIDER or project default)."
         ),
     )
     parser.add_argument(

@@ -59,6 +59,6 @@ Run:
 streamlit run streamlit_app.py
 ```
 
-The UI intentionally keeps business rules in `ReviewService` and testable display helpers in `fitch_extractor/ui/review.py`. Streamlit is responsible for rendering controls and forwarding user actions.
+The UI intentionally keeps business rules in `ReviewService` and testable display helpers in `revenue_segment_extractor/ui/review.py`. Streamlit is responsible for rendering controls and forwarding user actions.
 
 The segment evidence panel renders the source PDF page with the stored evidence bounding box highlighted when coordinates are available. The ESG review panel uses the selected factor's page reference and evidence text to locate a matching parsed text block on demand, then renders the same highlighted page preview. If an evidence item has no stored bounding box, no parsed ESG match, or the source PDF cannot be rendered, the page number and evidence text remain visible for review.

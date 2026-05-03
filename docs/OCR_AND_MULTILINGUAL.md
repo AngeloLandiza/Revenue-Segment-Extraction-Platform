@@ -20,10 +20,10 @@ Fallback only runs on low-text pages. It is disabled by default because OCR and 
 Enable local OCR with environment configuration:
 
 ```bash
-FITCH_ENABLE_PAGE_TEXT_FALLBACK=true
-FITCH_PAGE_TEXT_FALLBACK_PROVIDER=ocr
-FITCH_OCR_COMMAND=tesseract
-FITCH_OCR_LANGUAGES=eng
+RSE_ENABLE_PAGE_TEXT_FALLBACK=true
+RSE_PAGE_TEXT_FALLBACK_PROVIDER=ocr
+RSE_OCR_COMMAND=tesseract
+RSE_OCR_LANGUAGES=eng
 ```
 
 The OCR provider uses an installed command-line OCR tool. The project does not require OCR libraries during normal setup. If OCR is enabled but the command is missing or fails, parsing continues and records `blocks_json.text_fallback.status = "failed"` with the error.

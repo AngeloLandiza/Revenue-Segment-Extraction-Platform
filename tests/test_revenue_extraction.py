@@ -10,7 +10,7 @@ from pathlib import Path
 import fitz
 from pydantic import ValidationError
 
-from fitch_extractor.extraction import (
+from revenue_segment_extractor.extraction import (
     ExtractionSettings,
     FakeRevenueExtractionProvider,
     LLMExtractionResponse,
@@ -18,21 +18,21 @@ from fitch_extractor.extraction import (
     RevenueExtractionService,
     select_extraction_candidates,
 )
-from fitch_extractor.extraction.candidate_selection import is_table_of_contents_page
-from fitch_extractor.extraction.providers import LLMExtractionRequest
-from fitch_extractor.extraction.deduplication import PreparedRevenueRow, deduplicate_rows
-from fitch_extractor.extraction.periods import keep_latest_year_rows
-from fitch_extractor.extraction.prompts import build_first_pass_extraction_prompt
-from fitch_extractor.extraction.row_selection import keep_primary_table_rows
-from fitch_extractor.extraction.table_alignment import align_rows_to_preferred_metric
-from fitch_extractor.ingestion import FakePageTextFallbackProvider, PdfIngestionService
-from fitch_extractor.models import SEGMENT_STATUS_READY_FOR_REVIEW, PageCandidate, ParsedPage
-from fitch_extractor.persistence import SQLiteRepository, connect_database, initialize_database
+from revenue_segment_extractor.extraction.candidate_selection import is_table_of_contents_page
+from revenue_segment_extractor.extraction.providers import LLMExtractionRequest
+from revenue_segment_extractor.extraction.deduplication import PreparedRevenueRow, deduplicate_rows
+from revenue_segment_extractor.extraction.periods import keep_latest_year_rows
+from revenue_segment_extractor.extraction.prompts import build_first_pass_extraction_prompt
+from revenue_segment_extractor.extraction.row_selection import keep_primary_table_rows
+from revenue_segment_extractor.extraction.table_alignment import align_rows_to_preferred_metric
+from revenue_segment_extractor.ingestion import FakePageTextFallbackProvider, PdfIngestionService
+from revenue_segment_extractor.models import SEGMENT_STATUS_READY_FOR_REVIEW, PageCandidate, ParsedPage
+from revenue_segment_extractor.persistence import SQLiteRepository, connect_database, initialize_database
 
 
 @dataclass(frozen=True)
 class PromptDocumentFixture:
-    company_name: str = "Example Fitch Co."
+    company_name: str = "Example Demo Co."
     document_name: str = "sample-10k.pdf"
     fiscal_period: str | None = "FY2025"
     reported_total: Decimal | None = None
@@ -260,7 +260,7 @@ class RevenueExtractionTest(unittest.TestCase):
     def test_strict_schema_accepts_valid_output_and_rejects_missing_or_extra_fields(self) -> None:
         valid_output = RevenueExtractionOutput.model_validate_json(_response_json())
 
-        self.assertEqual("Example Fitch Co.", valid_output.company_name)
+        self.assertEqual("Example Demo Co.", valid_output.company_name)
         self.assertEqual(Decimal("120"), valid_output.rows[0].revenue_value)
 
         missing_required = json.loads(_response_json())
@@ -769,7 +769,7 @@ class RevenueExtractionTest(unittest.TestCase):
             try:
                 ingestion_summary = PdfIngestionService(repo).ingest_pdf(
                     pdf_path=pdf_path,
-                    company_name="Example Fitch Co.",
+                    company_name="Example Demo Co.",
                     fiscal_period="FY2025",
                     candidate_limit=5,
                 )
@@ -815,7 +815,7 @@ class RevenueExtractionTest(unittest.TestCase):
                     ),
                 ).ingest_pdf(
                     pdf_path=pdf_path,
-                    company_name="Example Fitch Co.",
+                    company_name="Example Demo Co.",
                     fiscal_period="FY2025",
                     currency="USD",
                     scale="millions",
@@ -839,7 +839,7 @@ class RevenueExtractionTest(unittest.TestCase):
 
 
 def _request(prompt: str):
-    from fitch_extractor.extraction.providers import LLMExtractionRequest
+    from revenue_segment_extractor.extraction.providers import LLMExtractionRequest
 
     return LLMExtractionRequest(
         prompt=prompt,
@@ -854,7 +854,7 @@ def _repository_with_candidate_page_for_number(page_number: int):
     initialize_database(connection)
     repo = SQLiteRepository(connection)
     document = repo.create_document(
-        company_name="Example Fitch Co.",
+        company_name="Example Demo Co.",
         document_name="sample-10k.pdf",
         source_path="sample-10k.pdf",
         fiscal_period="FY2025",
@@ -995,7 +995,7 @@ def _repository_with_missed_revenue_equivalent_page():
     initialize_database(connection)
     repo = SQLiteRepository(connection)
     document = repo.create_document(
-        company_name="Example Fitch Co.",
+        company_name="Example Demo Co.",
         document_name="sample.pdf",
         source_path="sample.pdf",
     )
@@ -1115,7 +1115,7 @@ class DiscoveryFallbackProvider:
         return LLMExtractionResponse(
             content=json.dumps(
                 {
-                    "company_name": "Example Fitch Co.",
+                    "company_name": "Example Demo Co.",
                     "document_name": "sample.pdf",
                     "fiscal_period": None,
                     "reported_total": None,
@@ -1192,7 +1192,7 @@ def _parsed_page(page_number: int, text: str) -> ParsedPage:
 def _response_json(rows: list[dict] | None = None) -> str:
     return json.dumps(
         {
-            "company_name": "Example Fitch Co.",
+            "company_name": "Example Demo Co.",
             "document_name": "sample-10k.pdf",
             "fiscal_period": "FY2025",
             "reported_total": None,

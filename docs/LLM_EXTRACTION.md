@@ -8,7 +8,7 @@ The extraction package also includes optional second-pass verification and arbit
 
 ## Provider Interface
 
-Providers implement `LLMProvider.complete_json()` in `fitch_extractor/extraction/providers.py`.
+Providers implement `LLMProvider.complete_json()` in `revenue_segment_extractor/extraction/providers.py`.
 
 Implemented providers:
 
@@ -23,15 +23,15 @@ The CLI passes the selected provider into first-pass extraction, second-pass ver
 
 Environment variables:
 
-- `FITCH_EXTRACTION_PROVIDER`: `fake` or `anthropic`; defaults to `anthropic`.
-- `FITCH_EXTRACTION_MODEL`: extraction model name; defaults to `claude-sonnet-4-6`.
-- `FITCH_VERIFICATION_MODEL`: optional model for second-pass verification; defaults to `FITCH_EXTRACTION_MODEL`.
-- `FITCH_ARBITRATION_MODEL`: optional model for difficult arbitration; defaults to the extraction model.
-- `FITCH_EXTRACTION_PAGE_BUNDLE_SIZE`: maximum adjacent candidate pages per prompt; defaults to `2`.
-- `FITCH_EXTRACTION_MAX_TOKENS`: provider output token limit; defaults to `16000`.
-- `FITCH_EXTRACTION_TEMPERATURE`: provider temperature; defaults to `0`.
-- `FITCH_ENABLE_SECOND_PASS_VERIFICATION`: boolean; defaults to `true`.
-- `FITCH_ENABLE_ARBITRATION`: boolean; defaults to `false`.
+- `RSE_EXTRACTION_PROVIDER`: `fake` or `anthropic`; defaults to `anthropic`.
+- `RSE_EXTRACTION_MODEL`: extraction model name; defaults to `claude-sonnet-4-6`.
+- `RSE_VERIFICATION_MODEL`: optional model for second-pass verification; defaults to `RSE_EXTRACTION_MODEL`.
+- `RSE_ARBITRATION_MODEL`: optional model for difficult arbitration; defaults to the extraction model.
+- `RSE_EXTRACTION_PAGE_BUNDLE_SIZE`: maximum adjacent candidate pages per prompt; defaults to `2`.
+- `RSE_EXTRACTION_MAX_TOKENS`: provider output token limit; defaults to `16000`.
+- `RSE_EXTRACTION_TEMPERATURE`: provider temperature; defaults to `0`.
+- `RSE_ENABLE_SECOND_PASS_VERIFICATION`: boolean; defaults to `true`.
+- `RSE_ENABLE_ARBITRATION`: boolean; defaults to `false`.
 - `ANTHROPIC_API_KEY`: required only for Anthropic mode.
 
 API keys are read from the environment and are not logged or persisted.
@@ -218,14 +218,14 @@ python scripts/extract_revenue_segments.py doc_... --provider fake
 Run Anthropic extraction:
 
 ```bash
-export FITCH_EXTRACTION_PROVIDER=anthropic
-export FITCH_EXTRACTION_MODEL=claude-sonnet-4-6
-export FITCH_ARBITRATION_MODEL=claude-sonnet-4-6
+export RSE_EXTRACTION_PROVIDER=anthropic
+export RSE_EXTRACTION_MODEL=claude-sonnet-4-6
+export RSE_ARBITRATION_MODEL=claude-sonnet-4-6
 export ANTHROPIC_API_KEY=...
 python scripts/extract_revenue_segments.py doc_...
 ```
 
-Use a different extraction model by setting `FITCH_EXTRACTION_MODEL` or passing `--model`. Use a different arbitration model by setting `FITCH_ARBITRATION_MODEL` or passing `--arbitration-model`.
+Use a different extraction model by setting `RSE_EXTRACTION_MODEL` or passing `--model`. Use a different arbitration model by setting `RSE_ARBITRATION_MODEL` or passing `--arbitration-model`.
 
 ## Verification
 

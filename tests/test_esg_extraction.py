@@ -9,8 +9,8 @@ from decimal import Decimal
 
 from pydantic import ValidationError
 
-from fitch_extractor.exporting import ExportService
-from fitch_extractor.extraction import (
+from revenue_segment_extractor.exporting import ExportService
+from revenue_segment_extractor.extraction import (
     EsgExtractionService,
     ExtractedEsgFactor,
     FakeRevenueExtractionProvider,
@@ -18,8 +18,8 @@ from fitch_extractor.extraction import (
     select_esg_candidate_pages,
     should_discard_esg_factor,
 )
-from fitch_extractor.models import DOCUMENT_STATUS_APPROVED, SEGMENT_STATUS_APPROVED
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.models import DOCUMENT_STATUS_APPROVED, SEGMENT_STATUS_APPROVED
+from revenue_segment_extractor.persistence import (
     ReviewService,
     SQLiteRepository,
     connect_database,
@@ -335,7 +335,7 @@ class EsgExtractionTest(unittest.TestCase):
 
     def _create_document(self, *, status: str = "new"):
         return self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
             fiscal_period="FY2025",

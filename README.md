@@ -1,4 +1,4 @@
-# Fitch Revenue Segment Extraction Prototype
+# Revenue Segment Extraction Prototype
 
 Production-minded local prototype for extracting revenue segment data from annual reports and
 10-K PDFs. The app combines deterministic PDF parsing and evidence retrieval with schema-bound
@@ -6,8 +6,7 @@ LLM extraction, Python normalization, analyst review, NACE mapping, ESG factor e
 prototype scoring, and final CSV/XLSX/JSON export.
 
 This repository is intended to be easy for industry reviewers to run, audit, and extend. It is
-not a production Fitch system and does not make official Fitch Ratings or Sustainable Fitch
-scoring claims.
+not a production system and does not make official ratings or sustainability scoring claims.
 
 ## Core Output
 
@@ -48,7 +47,7 @@ This prototype reduces that risk with a layered pipeline:
 ## Repository Layout
 
 ```text
-fitch_extractor/
+revenue_segment_extractor/
   ingestion/       PDF parsing, metadata detection, evidence rendering, page retrieval
   extraction/      provider setup, prompts, schemas, normalization, validation, verification
   nace/            NACE Rev.2 reference retrieval and mapping
@@ -67,7 +66,7 @@ config/            Prototype scoring rules
 
 - Python 3.11 or newer recommended.
 - A local virtual environment.
-- `ANTHROPIC_API_KEY` only when using `FITCH_EXTRACTION_PROVIDER=anthropic`.
+- `ANTHROPIC_API_KEY` only when using `RSE_EXTRACTION_PROVIDER=anthropic`.
 - No API key is required for deterministic fake-provider tests and smoke demos.
 
 Dependencies are intentionally small and listed in `requirements.txt`:
@@ -103,13 +102,13 @@ Then edit `.env.local` and set your private key.
 | Variable | Purpose |
 | --- | --- |
 | `ANTHROPIC_API_KEY` | Required only for real Anthropic extraction. |
-| `FITCH_EXTRACTION_PROVIDER` | `anthropic` for real extraction or `fake` for deterministic smoke tests. Defaults to `anthropic`. |
-| `FITCH_EXTRACTION_MODEL` | Extraction, NACE, ESG, and default verifier model. |
-| `FITCH_VERIFICATION_MODEL` | Optional second-pass verifier model. |
-| `FITCH_ENABLE_SECOND_PASS_VERIFICATION` | Enables verifier pass. Defaults to `true`. |
-| `FITCH_ENABLE_ARBITRATION` | Enables optional arbitration pass. Defaults to `false`. |
-| `FITCH_ARBITRATION_MODEL` | Optional arbitration model override. Defaults to the extraction model when unset. |
-| `FITCH_EXTRACTION_PAGE_BUNDLE_SIZE` | Candidate pages per extraction prompt bundle. |
+| `RSE_EXTRACTION_PROVIDER` | `anthropic` for real extraction or `fake` for deterministic smoke tests. Defaults to `anthropic`. |
+| `RSE_EXTRACTION_MODEL` | Extraction, NACE, ESG, and default verifier model. |
+| `RSE_VERIFICATION_MODEL` | Optional second-pass verifier model. |
+| `RSE_ENABLE_SECOND_PASS_VERIFICATION` | Enables verifier pass. Defaults to `true`. |
+| `RSE_ENABLE_ARBITRATION` | Enables optional arbitration pass. Defaults to `false`. |
+| `RSE_ARBITRATION_MODEL` | Optional arbitration model override. Defaults to the extraction model when unset. |
+| `RSE_EXTRACTION_PAGE_BUNDLE_SIZE` | Candidate pages per extraction prompt bundle. |
 
 The app does not log API keys. Provider errors are redacted before persistence or display.
 
@@ -118,7 +117,7 @@ The app does not log API keys. Provider errors are redacted before persistence o
 No-API smoke demo:
 
 ```bash
-export FITCH_EXTRACTION_PROVIDER=fake
+export RSE_EXTRACTION_PROVIDER=fake
 .venv/bin/streamlit run streamlit_app.py
 ```
 
@@ -233,7 +232,7 @@ Run compile checks:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m compileall -q \
-  fitch_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py \
+  revenue_segment_extractor streamlit_app.py scripts tests parallel_folder_pipeline.py \
   compare_extractions_to_ground_truth.py test_claude_api.py
 ```
 
@@ -245,7 +244,7 @@ command. Keep changes small, typed, and covered by focused tests.
 Prepare labeled gold CSV/JSON files, then run:
 
 ```bash
-.venv/bin/python -m fitch_extractor.evaluate \
+.venv/bin/python -m revenue_segment_extractor.evaluate \
   --gold 'data/gold/*.csv' \
   --pred exports
 ```
@@ -269,10 +268,9 @@ The evaluator writes `evaluation_summary.md`, `evaluation_results.csv`, and
 
 - Do not commit `.env.local`, `.env`, SQLite databases, uploaded PDFs, generated evidence
   previews, exports, or reports.
-- This is a local class/project prototype, not a production Fitch system.
+- This is a local class/project prototype, not a production system.
 - Extraction quality depends on PDF text/table quality and model access.
 - Scanned PDFs may require OCR fallback configuration and extra review.
 - NACE and ESG linkage can be ambiguous and must remain reviewable.
-- Prototype scores are demonstration-only and are not official Fitch Ratings or Sustainable
-  Fitch outputs.
+- Prototype scores are demonstration-only and are not official ratings or sustainability outputs.
 - No final quality claim should be made without running the evaluator on a labeled gold set.

@@ -4,7 +4,7 @@ import os
 import unittest
 from unittest.mock import patch
 
-from fitch_extractor.extraction.providers import _redact_sensitive
+from revenue_segment_extractor.extraction.providers import _redact_sensitive
 
 
 class ProviderSecurityTest(unittest.TestCase):

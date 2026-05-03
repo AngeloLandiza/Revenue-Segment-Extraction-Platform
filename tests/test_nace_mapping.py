@@ -8,14 +8,14 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 
-from fitch_extractor.exporting import ExportService
-from fitch_extractor.extraction.config import DEFAULT_EXTRACTION_MODEL
-from fitch_extractor.extraction.providers import FakeRevenueExtractionProvider
-from fitch_extractor.models import DOCUMENT_STATUS_APPROVED, SEGMENT_STATUS_APPROVED
-from fitch_extractor.nace import NaceMappingService, load_nace_nodes, retrieve_nace_candidates
-from fitch_extractor.nace.reference import NaceNode
-from fitch_extractor.nace.rerank import rerank_nace_candidates
-from fitch_extractor.persistence import (
+from revenue_segment_extractor.exporting import ExportService
+from revenue_segment_extractor.extraction.config import DEFAULT_EXTRACTION_MODEL
+from revenue_segment_extractor.extraction.providers import FakeRevenueExtractionProvider
+from revenue_segment_extractor.models import DOCUMENT_STATUS_APPROVED, SEGMENT_STATUS_APPROVED
+from revenue_segment_extractor.nace import NaceMappingService, load_nace_nodes, retrieve_nace_candidates
+from revenue_segment_extractor.nace.reference import NaceNode
+from revenue_segment_extractor.nace.rerank import rerank_nace_candidates
+from revenue_segment_extractor.persistence import (
     ReviewService,
     SQLiteRepository,
     connect_database,
@@ -434,7 +434,7 @@ class NaceMappingTest(unittest.TestCase):
         status: str = SEGMENT_STATUS_APPROVED,
     ):
         document = self.repo.create_document(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="annual-report.pdf",
             source_path="fixtures/annual-report.pdf",
             fiscal_period="FY2025",

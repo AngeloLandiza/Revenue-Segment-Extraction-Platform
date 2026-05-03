@@ -1,6 +1,6 @@
 # Prototype Scoring Model
 
-This scoring layer is for local class/project demonstration only. It is not an official Fitch Ratings score, Sustainable Fitch score, ESG rating, credit rating, or investment recommendation.
+This scoring layer is for local class/project demonstration only. It is not an official ratings score, sustainability score, ESG rating, credit rating, or investment recommendation.
 
 ## Configuration
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from decimal import Decimal
 
-from fitch_extractor.extraction.normalization import (
+from revenue_segment_extractor.extraction.normalization import (
     normalize_currency,
     normalize_page_reference,
     normalize_period_label,
@@ -11,13 +11,13 @@ from fitch_extractor.extraction.normalization import (
     normalize_scale,
     normalize_extracted_row,
 )
-from fitch_extractor.extraction.schemas import ExtractedRevenueRow, RevenueExtractionOutput
-from fitch_extractor.extraction.validation import (
+from revenue_segment_extractor.extraction.schemas import ExtractedRevenueRow, RevenueExtractionOutput
+from revenue_segment_extractor.extraction.validation import (
     ValidationConfig,
     reconcile_totals,
     validate_normalized_rows,
 )
-from fitch_extractor.models import ParsedPage
+from revenue_segment_extractor.models import ParsedPage
 from tests.fixtures import FIXED_TIME, build_document
 
 
@@ -30,7 +30,7 @@ class NormalizationTest(unittest.TestCase):
 
     def test_infers_currency_and_scale_from_page_context(self) -> None:
         output = RevenueExtractionOutput(
-            company_name="Example Fitch Co.",
+            company_name="Example Demo Co.",
             document_name="sample.pdf",
             fiscal_period="FY2025",
             reported_total=None,
@@ -317,7 +317,7 @@ def _normalized_row(
     evidence_text: str = "Commercial revenue 120",
 ):
     output = RevenueExtractionOutput(
-        company_name="Example Fitch Co.",
+        company_name="Example Demo Co.",
         document_name="sample.pdf",
         fiscal_period="FY2025",
         reported_total=None,

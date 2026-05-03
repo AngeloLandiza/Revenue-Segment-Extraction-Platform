@@ -2,14 +2,14 @@
 
 ## Status
 
-The internal data model is implemented as frozen dataclasses in `fitch_extractor/models.py`.
-SQLite persistence is implemented in `fitch_extractor/persistence/`.
-API-facing Pydantic response schemas are implemented in `fitch_extractor/api/schemas.py`.
-PDF parsing and deterministic candidate retrieval are implemented in `fitch_extractor/ingestion/`.
-First-pass LLM revenue extraction, post-extraction normalization/validation, optional second-pass verification, and optional LLM arbitration are implemented in `fitch_extractor/extraction/`.
+The internal data model is implemented as frozen dataclasses in `revenue_segment_extractor/models.py`.
+SQLite persistence is implemented in `revenue_segment_extractor/persistence/`.
+API-facing Pydantic response schemas are implemented in `revenue_segment_extractor/api/schemas.py`.
+PDF parsing and deterministic candidate retrieval are implemented in `revenue_segment_extractor/ingestion/`.
+First-pass LLM revenue extraction, post-extraction normalization/validation, optional second-pass verification, and optional LLM arbitration are implemented in `revenue_segment_extractor/extraction/`.
 NACE Rev.2 reference loading, deterministic candidate retrieval, optional LLM reranking, candidate persistence, reviewer selection/override, Streamlit review display, and export population are implemented.
 ESG candidate retrieval, strict-schema LLM extraction, segment-link enforcement, reviewer editing/linking/approval/rejection, and export population are implemented.
-Prototype scoring is implemented in `fitch_extractor/scoring.py` with config-driven NACE base scores, reviewed ESG adjustments, revenue weighting, Streamlit display, persistence, and export population.
+Prototype scoring is implemented in `revenue_segment_extractor/scoring.py` with config-driven NACE base scores, reviewed ESG adjustments, revenue weighting, Streamlit display, persistence, and export population.
 
 HTTP API routes are not implemented yet.
 
@@ -36,7 +36,7 @@ The export writer maps `SegmentRow`, `Document`, `SegmentEvidence`, review event
 Local persistence uses SQLite. The default database path is:
 
 ```text
-data/fitch_extractor.sqlite3
+data/revenue_segment_extractor.sqlite3
 ```
 
 Initialize:
@@ -283,7 +283,7 @@ First-pass extraction and post-processing create validation issues for:
 
 ## Strict First-Pass LLM Output Schema
 
-The provider must return valid JSON matching `RevenueExtractionOutput` in `fitch_extractor/extraction/schemas.py`.
+The provider must return valid JSON matching `RevenueExtractionOutput` in `revenue_segment_extractor/extraction/schemas.py`.
 
 Top-level fields:
 
@@ -405,7 +405,7 @@ ESG edit, unlink, relink, approve, and reject actions are audit events. The fact
 
 ### SegmentScore
 
-Represents stored segment-level prototype score output. This is a class/project demonstration score only, not an official Fitch Ratings or Sustainable Fitch score.
+Represents stored segment-level prototype score output. This is a class/project demonstration score only, not an official ratings or sustainability score.
 
 Fields:
 

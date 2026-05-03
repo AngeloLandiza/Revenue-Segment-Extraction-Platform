@@ -41,7 +41,7 @@ The important rule is conservative linking: company-wide ESG is not copied to ev
 
 ## Scoring Calculation
 
-The scoring model is a prototype demo score, not an official Fitch Ratings score, Sustainable Fitch score, credit rating, or investment recommendation.
+The scoring model is a prototype demo score, not an official ratings score, sustainability score, credit rating, or investment recommendation.
 
 The scale is **1 to 5**, where **1 is better/lower impact** and **5 is worse/higher impact**.
 

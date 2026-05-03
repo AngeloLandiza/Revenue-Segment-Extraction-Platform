@@ -1,12 +1,12 @@
-# Fitch Revenue-Segment Extraction Implementation Plan
+# Revenue Segment Revenue-Segment Extraction Implementation Plan
 
 ## Current State Summary
 
-The configured workspace at `/Users/angelolandiza/Documents/CS 294 Project FINAL` now contains the initial internal data model and SQLite persistence layer for the Fitch extraction prototype.
+The configured workspace at `/Users/angelolandiza/Documents/CS 294 Project FINAL` now contains the initial internal data model and SQLite persistence layer for the revenue segment extraction prototype.
 
 Audit findings by requested area:
 
-1. Backend structure: `fitch_extractor/` now contains internal models, API-facing schemas, SQLite persistence helpers, a repository, a review service, deterministic ingestion, first-pass LLM revenue extraction, NACE mapping, ESG extraction/review, prototype scoring, and export services. No API routes are present yet.
+1. Backend structure: `revenue_segment_extractor/` now contains internal models, API-facing schemas, SQLite persistence helpers, a repository, a review service, deterministic ingestion, first-pass LLM revenue extraction, NACE mapping, ESG extraction/review, prototype scoring, and export services. No API routes are present yet.
 2. Frontend / Streamlit structure: `streamlit_app.py` provides local review, ESG, scoring, and export controls.
 3. API routes and response shapes: no route definitions are present. Pydantic response schemas exist for the implemented data entities.
 4. Database or persistence layer: local SQLite initialization/reset helpers and repository methods are present.
@@ -38,12 +38,12 @@ Status: partially complete. Internal models, Pydantic schemas, SQLite persistenc
 Likely files/modules:
 
 - `requirements.txt`
-- `fitch_extractor/__init__.py`
-- `fitch_extractor/models.py`
-- `fitch_extractor/api/schemas.py`
-- `fitch_extractor/persistence/database.py`
-- `fitch_extractor/persistence/repository.py`
-- `fitch_extractor/persistence/review.py`
+- `revenue_segment_extractor/__init__.py`
+- `revenue_segment_extractor/models.py`
+- `revenue_segment_extractor/api/schemas.py`
+- `revenue_segment_extractor/persistence/database.py`
+- `revenue_segment_extractor/persistence/repository.py`
+- `revenue_segment_extractor/persistence/review.py`
 - `tests/test_models_and_schemas.py`
 - `tests/test_persistence_repository.py`
 - `docs/API_CONTRACT.md`
@@ -62,9 +62,9 @@ Goal: extract text, page metadata, and candidate revenue sections before any LLM
 
 Likely files/modules:
 
-- `src/fitch_extractor/parsing/pdf_parser.py`
-- `src/fitch_extractor/parsing/page_model.py`
-- `src/fitch_extractor/retrieval/candidates.py`
+- `src/revenue_segment_extractor/parsing/pdf_parser.py`
+- `src/revenue_segment_extractor/parsing/page_model.py`
+- `src/revenue_segment_extractor/retrieval/candidates.py`
 - `tests/test_pdf_parser.py`
 - `tests/test_candidates.py`
 - `samples/` or `fixtures/` with small non-sensitive PDFs/text fixtures
@@ -84,10 +84,10 @@ Status: first-pass revenue segment extraction is implemented for candidate page 
 
 Likely files/modules:
 
-- `src/fitch_extractor/llm/client.py`
-- `src/fitch_extractor/llm/prompts.py`
-- `src/fitch_extractor/extraction/segment_extractor.py`
-- `src/fitch_extractor/validation/normalization.py`
+- `src/revenue_segment_extractor/llm/client.py`
+- `src/revenue_segment_extractor/llm/prompts.py`
+- `src/revenue_segment_extractor/extraction/segment_extractor.py`
+- `src/revenue_segment_extractor/validation/normalization.py`
 - `tests/test_segment_extractor.py`
 - `tests/test_normalization.py`
 
@@ -104,9 +104,9 @@ Goal: make human review the final quality gate before final exports.
 
 Likely files/modules:
 
-- `src/fitch_extractor/validation/rules.py`
-- `src/fitch_extractor/review/events.py`
-- `src/fitch_extractor/export/exporter.py`
+- `src/revenue_segment_extractor/validation/rules.py`
+- `src/revenue_segment_extractor/review/events.py`
+- `src/revenue_segment_extractor/export/exporter.py`
 - `tests/test_validation_rules.py`
 - `tests/test_review_gate.py`
 - `tests/test_exporter.py`
@@ -124,9 +124,9 @@ Goal: add mapping and scoring as reviewable enrichments rather than hidden final
 
 Likely files/modules:
 
-- `src/fitch_extractor/nace/mapping.py`
-- `src/fitch_extractor/esg/factors.py`
-- `src/fitch_extractor/scoring/segment_score.py`
+- `src/revenue_segment_extractor/nace/mapping.py`
+- `src/revenue_segment_extractor/esg/factors.py`
+- `src/revenue_segment_extractor/scoring/segment_score.py`
 - `tests/test_nace_mapping.py`
 - `tests/test_esg_factors.py`
 - `tests/test_segment_score.py`
@@ -145,8 +145,8 @@ Goal: provide a reviewable local prototype without breaking established contract
 Likely files/modules:
 
 - `app.py` or `streamlit_app.py`
-- `src/fitch_extractor/api/routes.py`
-- `src/fitch_extractor/api/schemas.py`
+- `src/revenue_segment_extractor/api/routes.py`
+- `src/revenue_segment_extractor/api/schemas.py`
 - `tests/test_api_contract.py`
 - `tests/test_streamlit_smoke.py`
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from decimal import Decimal
 
-from fitch_extractor.models import (
+from revenue_segment_extractor.models import (
     DOCUMENT_STATUS_NEW,
     SEGMENT_STATUS_PENDING,
     Document,
@@ -17,7 +17,7 @@ FIXED_TIME = datetime(2026, 1, 2, 3, 4, 5, tzinfo=UTC)
 def build_document(
     *,
     id: str = "doc_fixture",
-    company_name: str = "Example Fitch Co.",
+    company_name: str = "Example Demo Co.",
     document_name: str = "example-annual-report.pdf",
     source_path: str = "fixtures/example-annual-report.pdf",
     fiscal_period: str = "FY2025",

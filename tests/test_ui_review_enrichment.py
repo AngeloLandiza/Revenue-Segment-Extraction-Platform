@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from fitch_extractor.models import ParsedPage, utc_now
-from fitch_extractor.ui.review import _row_needs_nace_mapping
+from revenue_segment_extractor.models import ParsedPage, utc_now
+from revenue_segment_extractor.ui.review import _row_needs_nace_mapping
 from streamlit_app import (
     _locate_esg_evidence_bbox,
     _page_number_from_ref,

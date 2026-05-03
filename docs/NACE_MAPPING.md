@@ -17,7 +17,7 @@ The CSV was copied from the local source file:
 Application code does not depend on that absolute source path. Runtime resolution uses:
 
 1. An explicit path passed to `load_nace_nodes(...)`.
-2. The `FITCH_NACE_REV2_CSV_PATH` environment variable.
+2. The `RSE_NACE_REV2_CSV_PATH` environment variable.
 3. The repo default `reference/NACE_Rev2_Outline.csv`.
 
 ## Detected CSV Schema

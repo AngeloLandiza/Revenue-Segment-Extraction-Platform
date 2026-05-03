@@ -6,7 +6,7 @@ from pathlib import Path
 
 import fitz
 
-from fitch_extractor.ingestion import (
+from revenue_segment_extractor.ingestion import (
     FakePageTextFallbackProvider,
     PdfIngestionService,
     infer_document_metadata,
@@ -18,7 +18,7 @@ from fitch_extractor.ingestion import (
     score_pages,
     select_candidate_pages,
 )
-from fitch_extractor.persistence import SQLiteRepository, connect_database, initialize_database
+from revenue_segment_extractor.persistence import SQLiteRepository, connect_database, initialize_database
 
 
 class PdfIngestionTest(unittest.TestCase):
@@ -113,7 +113,7 @@ class PdfIngestionTest(unittest.TestCase):
         try:
             summary = PdfIngestionService(repository, fallback_provider=provider).ingest_pdf(
                 pdf_path=self.pdf_path,
-                company_name="Example Fitch Co.",
+                company_name="Example Demo Co.",
                 candidate_limit=5,
             )
 
@@ -193,7 +193,7 @@ class PdfIngestionTest(unittest.TestCase):
         try:
             summary = PdfIngestionService(repository).ingest_pdf(
                 pdf_path=self.pdf_path,
-                company_name="Example Fitch Co.",
+                company_name="Example Demo Co.",
                 candidate_limit=5,
             )
 
@@ -219,7 +219,7 @@ class PdfIngestionTest(unittest.TestCase):
                 candidate_limit=5,
             )
 
-            self.assertEqual("Example Fitch Co.", summary.document.company_name)
+            self.assertEqual("Example Demo Co.", summary.document.company_name)
             self.assertEqual("FY2025", summary.document.fiscal_period)
             self.assertEqual("USD", summary.document.currency)
             self.assertEqual("millions", summary.document.scale)
@@ -255,7 +255,7 @@ class PdfIngestionTest(unittest.TestCase):
                 (),
                 {
                     "page_number": page.page_number,
-                    "text": page.text.replace("Example Fitch Co.", "Annual report overview"),
+                    "text": page.text.replace("Example Demo Co.", "Annual report overview"),
                 },
             )()
             for page in pages
@@ -272,7 +272,7 @@ def _write_sample_pdf(path: Path) -> None:
     overview_page = document.new_page(width=612, height=792)
     overview_page.insert_text(
         (72, 72),
-        "Example Fitch Co.\nAnnual Report 2025\nAnnual report overview\n"
+        "Example Demo Co.\nAnnual Report 2025\nAnnual report overview\n"
         "This page describes governance and strategy.",
         fontsize=11,
     )

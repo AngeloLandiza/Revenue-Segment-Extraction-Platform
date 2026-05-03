@@ -38,7 +38,7 @@ class ParallelFolderPipelineTest(unittest.TestCase):
     def test_manual_metadata_retry_merges_existing_payload(self) -> None:
         payload = {
             "pdf": "report.pdf",
-            "database": "fitch.sqlite3",
+            "database": "revenue_segment.sqlite3",
             "provider": "fake",
             "candidate_limit": 15,
             "metadata": {"currency": "USD"},
