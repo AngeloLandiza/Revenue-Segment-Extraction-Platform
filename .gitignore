@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.env.local
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+data/uploads/
+data/evidence_previews/
+data/*.sqlite3
+exports/
+reports/

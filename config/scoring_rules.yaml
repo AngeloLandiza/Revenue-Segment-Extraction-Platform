@@ -1,0 +1,87 @@
+{
+  "model_label": "Prototype demo score only. Not an official Fitch Ratings or Sustainable Fitch score.",
+  "scale": {
+    "min": 1.0,
+    "max": 5.0,
+    "direction": "lower_is_better",
+    "description": "1 is best / lower impact; 5 is worst / higher impact."
+  },
+  "default_base_score": 3.0,
+  "base_scores": {
+    "sections": {
+      "A": 3.6,
+      "B": 4.7,
+      "C": 3.4,
+      "D": 4.1,
+      "E": 3.8,
+      "F": 3.2,
+      "G": 2.7,
+      "H": 3.5,
+      "I": 2.3,
+      "J": 2.1,
+      "K": 2.4,
+      "L": 2.5,
+      "M": 2.0,
+      "N": 2.3,
+      "O": 2.1,
+      "P": 1.8,
+      "Q": 1.9,
+      "R": 2.0,
+      "S": 2.4
+    },
+    "divisions": {
+      "05": 4.9,
+      "06": 4.8,
+      "07": 4.4,
+      "19": 4.8,
+      "20": 3.9,
+      "24": 4.1,
+      "35": 4.2,
+      "36": 3.7,
+      "37": 3.7,
+      "38": 3.6,
+      "39": 3.6,
+      "49": 3.7,
+      "50": 3.9,
+      "51": 4.0,
+      "62": 2.0,
+      "64": 2.2,
+      "65": 2.4,
+      "66": 2.2,
+      "86": 1.8
+    },
+    "codes": {
+      "35.11": 4.3,
+      "35.12": 4.1,
+      "65.11": 2.3,
+      "65.12": 2.4
+    }
+  },
+  "esg_adjustments": {
+    "polarity": {
+      "positive": -0.25,
+      "negative": 0.25,
+      "neutral": 0.0,
+      "mixed": 0.0,
+      "unknown": 0.0
+    },
+    "factor_type": {
+      "emissions_target": -0.15,
+      "decarbonization_plan": -0.20,
+      "renewable_investment": -0.25,
+      "coal_phaseout": -0.20,
+      "circular_economy": -0.15,
+      "social_program": -0.10,
+      "governance_policy": -0.05,
+      "company_wide_policy": -0.05,
+      "fossil_fuel_exposure": 0.25,
+      "controversy": 0.30,
+      "regulatory_violation": 0.30,
+      "safety_incident": 0.25,
+      "labor_issue": 0.20,
+      "biodiversity_impact": 0.20,
+      "water_risk": 0.20
+    }
+  },
+  "approved_esg_statuses": ["approved", "edited"]
+}
