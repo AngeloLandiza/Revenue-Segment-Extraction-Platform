@@ -1,4 +1,4 @@
-# Revenue Segment Extraction Prototype
+# Revenue Segment Extraction Platform
 
 Production-minded local prototype for extracting revenue segment data from annual reports and
 10-K PDFs. The app combines deterministic PDF parsing and evidence retrieval with schema-bound
